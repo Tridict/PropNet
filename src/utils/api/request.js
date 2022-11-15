@@ -8,7 +8,7 @@ class Request {
   async request(path, params) {
     try {
       const res = await fetch(baseUrl + path, params);
-      return res.json();
+      return res;
     } catch (error) {
       console.log(error);
       return error;
