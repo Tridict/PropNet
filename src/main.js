@@ -1,5 +1,5 @@
-import React from "../lib/react.js";
-import ReactDOM from "../lib/react-dom.js";
+import React from "../vendor/react.js";
+import ReactDOM from "../vendor/react-dom.js";
 import { MyApp } from "./app.js";
 
 const container = document.getElementById('root');

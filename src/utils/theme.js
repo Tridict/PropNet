@@ -1,4 +1,4 @@
-import React from "../../lib/react.js";
+import React from "../../vendor/react.js";
 
 export const themes = {
   light: {

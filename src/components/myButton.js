@@ -1,5 +1,5 @@
-import React, { useState } from "../../lib/react.js";
-import { Button } from "../../lib/tdesign.min.js";
+import React, { useState } from "../../vendor/react.js";
+import { Button } from "../../vendor/tdesign.min.js";
 import { ThemeContext } from "../utils/theme.js";
 
 export function MyButton(props) {

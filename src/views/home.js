@@ -1,5 +1,5 @@
-import { createElement as vNode, Fragment, useState } from "../../lib/react.js";
-import { Menu, Radio, Space, Select } from "../../lib/tdesign.min.js";
+import { createElement as vNode, Fragment, useState } from "../../vendor/react.js";
+import { Menu, Radio, Space, Select } from "../../vendor/tdesign.min.js";
 
 function MyMenu(props) {
   return vNode(Menu.HeadMenu, 
