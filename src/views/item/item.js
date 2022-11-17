@@ -1,34 +1,30 @@
 import { createElement as vNode, Fragment, useState } from "../../../vendor/react.js";
-import { Input, Button, Alert } from "../../../vendor/tdesign.min.js";
+import ReactRouterDom from "../../../vendor/react-router-dom.js";
+import { Input, Button } from "../../../vendor/tdesign.min.js";
 import { getItemByFace } from "../../utils/api/item.js";
 
-function SearchItem(props) {
+export default function SearchItem() {
   const [value, onChange] = useState('');
-  const [loading, setLoading] = useState(false);
-  async function onSearch() {
-    setLoading(true);
-    const res = await getItemByFace(value);
-    if (res.status === 200) {
-      props.setData(res.json());
-    } else {
-      alert(res.statusText);
-    }
-    setLoading(false);
-  }
   return vNode('div', null, [
     vNode('p', null, '请输入您要搜索的条目'),
     vNode(Input, {
       placeholder: '请输入您要搜索的条目',
       onChange: v => onChange(v),
-      onEnter: onSearch,
     }),
-    vNode(Button, {theme: 'primary', loading, onClick: onSearch}, '搜索')
+    vNode(ReactRouterDom.Link, {to: value}, vNode(Button, {theme: 'primary'}, '搜索')),
   ])
 }
 
-export default function ItemHome() {
-  const [data, setData] = useState();
+export async function loader({ params }) {
+  return getItemByFace(params.face);
+}
+
+export function ItemDetail() {
+  const data = ReactRouterDom.useLoaderData();
+  console.log(data);
   return vNode(Fragment, null, [
-    data ? vNode('div', null, 'haha') : vNode(SearchItem, { setData }),
-  ]);
+    vNode('p', null, '该条目不存在, 是否创建？'),
+    vNode(Button, null, '创建条目'),
+    vNode(ReactRouterDom.Link, {to: '../item'}, vNode(Button, null, '返回查询')),
+  ])
 }
