@@ -36,6 +36,32 @@ class Request {
     }
     return this.request(path, params);
   }
+
+  async put(path, data, config={}) {
+    const params = {
+      method: 'PUT',
+      ...config,
+      ...this.config,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+    return this.request(path, params);
+  }
+
+  async patch(path, data, config={}) {
+    const params = {
+      method: 'PATCH',
+      ...config,
+      ...this.config,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data),
+    }
+    return this.request(path, params);
+  }
 }
 
 const request = new Request();

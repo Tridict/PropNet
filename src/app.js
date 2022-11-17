@@ -13,19 +13,24 @@ const router = ReactRouterDom.createHashRouter([
     errorElement: vNode(ErrorPage),
     children: [
       {
+        // 条目检索页，查询结果页为?kw=key_word
         path: "item",
         element: vNode(Item),
       },
       {
+        // 条目详情页
         path: "item/:face",
         element: vNode(ItemDetail),
         loader: itemLoader,
       },
+      // 条目创建页 additem/
       {
+        // 答题入口 & 断言评估题页 & 断言填空题页
         path: "teach",
         element: vNode(Teach),
       },
       // {
+      //   // 断言检索页
       //   path: "assertion",
       //   element: vNode(Assertion),
       // },
