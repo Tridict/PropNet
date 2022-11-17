@@ -1,10 +1,24 @@
-import React from "../vendor/react.js";
-import { Home } from "./views/home.js";
-// import { MyButton } from "./components/myButton.js";
+import {createElement as vNode} from "../vendor/react.js";
+import ReactRouterDom from "../vendor/react-router-dom.js";
+import Home from "./views/home/home.js";
+import Item from "./views/item/item.js";
+import ErrorPage from "./views/error-page/error-page.js";
 import { ThemeContext, themes } from "./utils/theme.js";
 
+const router = ReactRouterDom.createBrowserRouter([
+  {
+    path: "/",
+    element: vNode(Home),
+    errorElement: vNode(ErrorPage),
+  },
+  {
+    path: "item",
+    element: vNode(Item),
+  },
+])
+
 export function MyApp() {
-  return React.createElement(ThemeContext.Provider, 
+  return vNode(ThemeContext.Provider, 
     {value: themes.dark}, 
-    React.createElement(Home));
+    vNode(ReactRouterDom.RouterProvider, {router}));
 }
