@@ -5,6 +5,12 @@ class Request {
     this.config = config;
   }
 
+  getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
   async request(path, params) {
     try {
       const res = await fetch(baseUrl + path, params);
@@ -20,7 +26,16 @@ class Request {
       method: 'GET',
       ...config,
       ...this.config,
-    }
+    };
+    const access_token = localStorage.getItem("access_token");
+    if (access_token?.length) {
+      Object.assign(params, {
+        headers: {
+          'authorization': `Bearer ${access_token}`,
+          'X-CSRF-TOKEN': access_token,
+        },
+      });
+    };
     return this.request(path, params);
   }
 
@@ -65,6 +80,7 @@ class Request {
 }
 
 const request = new Request();
+window.__request = request;
 
 export default request;
 export { request };
