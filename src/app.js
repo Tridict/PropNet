@@ -2,6 +2,7 @@ import {createElement as vNode} from "../vendor/react.js";
 import ReactRouterDom from "../vendor/react-router-dom.js";
 import Home from "./views/home/home.js";
 import Teach from "./views/teach/teach.js";
+import User from "./views/user/user.js";
 import Item, {loader as itemLoader, ItemDetail} from "./views/item/item.js";
 import ErrorPage from "./views/error-page/error-page.js";
 import { ThemeContext, themes } from "./utils/theme.js";
@@ -28,6 +29,11 @@ const router = ReactRouterDom.createHashRouter([
         // 答题入口 & 断言评估题页 & 断言填空题页
         path: "teach",
         element: vNode(Teach),
+      },
+      {
+        // User
+        path: "user",
+        element: vNode(User),
       },
       // {
       //   // 断言检索页
