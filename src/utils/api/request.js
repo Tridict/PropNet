@@ -1,20 +1,32 @@
+import storage from "../stores.js";
+
 const baseUrl = 'http://192.168.0.101:8000';
+
 
 class Request {
   constructor (config = {}) {
     this.config = config;
   }
 
-  getCookie(name) {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
-  }
-
   async request(path, params) {
     try {
+      const access_token = storage.getItem("access_token");
+      if (access_token?.length) {
+        Object.assign(params, {
+          headers: {
+            'authorization': `Bearer ${access_token}`,
+            'X-CSRF-TOKEN': access_token,
+          },
+        });
+      };
       const res = await fetch(baseUrl + path, params);
-      return res;
+      if (res?.ok || res?.status==200) {
+        return await res?.json?.();
+      } else if (res?.statusText) {
+        return await res?.body;
+      } else {
+        return res;
+      }
     } catch (error) {
       console.log(error);
       return error;
@@ -27,16 +39,7 @@ class Request {
       ...config,
       ...this.config,
     };
-    const access_token = localStorage.getItem("access_token");
-    if (access_token?.length) {
-      Object.assign(params, {
-        headers: {
-          'authorization': `Bearer ${access_token}`,
-          'X-CSRF-TOKEN': access_token,
-        },
-      });
-    };
-    return this.request(path, params);
+    return await this.request(path, params);
   }
 
   async post(path, data, config={}) {
@@ -49,7 +52,7 @@ class Request {
       },
       body: JSON.stringify(data),
     }
-    return this.request(path, params);
+    return await this.request(path, params);
   }
 
   async put(path, data, config={}) {
@@ -62,7 +65,7 @@ class Request {
       },
       body: JSON.stringify(data),
     }
-    return this.request(path, params);
+    return await this.request(path, params);
   }
 
   async patch(path, data, config={}) {
@@ -75,7 +78,7 @@ class Request {
       },
       body: JSON.stringify(data),
     }
-    return this.request(path, params);
+    return await this.request(path, params);
   }
 }
 
