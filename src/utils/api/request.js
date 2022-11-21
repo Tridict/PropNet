@@ -12,12 +12,19 @@ class Request {
     try {
       const access_token = storage.getItem("access_token");
       if (access_token?.length) {
-        Object.assign(params, {
-          headers: {
+        if (params?.headers==null) {
+          Object.assign(params, {
+            headers: {
+              'authorization': `Bearer ${access_token}`,
+              'X-CSRF-TOKEN': access_token,
+            },
+          });
+        } else {
+          Object.assign(params.headers, {
             'authorization': `Bearer ${access_token}`,
             'X-CSRF-TOKEN': access_token,
-          },
-        });
+          });
+        };
       };
       const res = await fetch(baseUrl + path, params);
       if (res?.ok || res?.status==200) {
