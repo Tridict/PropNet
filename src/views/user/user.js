@@ -10,13 +10,13 @@ export function Login() {
   const [form] = Form.useForm();
 
   const rules = {
-    'username_or_email': [{ required: true, message: '必填', type: 'error' }],
+    'account': [{ required: true, message: '必填', type: 'error' }],
     password: [{ required: true, message: '必填', type: 'error' }],
   };
 
   const onSubmit = async (e) => {
     if (e.validateResult === true) {
-      const data = await login(form.getFieldsValue(['username_or_email','password']))
+      const data = await login(form.getFieldsValue(['account','password']));
       if (data.access_token) {
         MessagePlugin.info('登录成功');
       } else if (data.error) {
@@ -41,7 +41,7 @@ export function Login() {
         // labelWidth: 100,
         rules,
       }, [
-        vNode(FormItem, {name: 'username_or_email'}, 
+        vNode(FormItem, {name: 'account'}, 
           vNode(Input, {
             // label: '用户名或邮箱',
             // clearable: true,
