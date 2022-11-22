@@ -27,13 +27,14 @@ class Request {
         };
       };
       const res = await fetch(baseUrl + path, params);
-      if (res?.ok || res?.status==200) {
-        return await res?.json?.();
-      } else if (res?.statusText) {
-        return await res?.body;
-      } else {
-        return res;
-      }
+      return res;
+      // if (res?.ok || res?.status==200) {
+      //   return await res?.json?.();
+      // } else if (res?.statusText) {
+      //   return await res?.body;
+      // } else {
+      //   return res;
+      // }
     } catch (error) {
       console.log(error);
       return error;
