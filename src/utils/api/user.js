@@ -10,6 +10,10 @@ export async function login(params) {
 }
 
 export async function register(params) {
-  const data = await request.post(`/api/user/actions/register`, params);
+  const res = await request.post(`/api/user/actions/register`, params);
+  const data = await res.json();
+  if (res.ok) {
+    data.ok = true;
+  }
   return data;
 }

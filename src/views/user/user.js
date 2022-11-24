@@ -17,10 +17,11 @@ export function Login() {
   const onSubmit = async (e) => {
     if (e.validateResult === true) {
       const data = await login(form.getFieldsValue(['account','password']));
+      console.log(data);
       if (data.access_token) {
-        MessagePlugin.info('登录成功');
-      } else if (data.error) {
-        MessagePlugin.error('登录失败');
+        MessagePlugin.success('登录成功');
+      } else if (data.msg) {
+        MessagePlugin.error(data.msg);
       }
     } else {
       MessagePlugin.info('请填入正确的内容');
@@ -103,6 +104,11 @@ export function Register() {
     if (e.validateResult === true) {
       const data = await register(form.getFieldsValue(['email', 'username','password']))
       console.log(data)
+      if (data.ok) {
+        MessagePlugin.success('注册成功');
+      } else if (data.msg) {
+        MessagePlugin.error(data.msg);
+      }
     } else {
       MessagePlugin.info('请填入正确的内容');
     }
