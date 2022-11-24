@@ -1,0 +1,257 @@
+FeatureNet Definitions
+see https://github.com/OAI/OpenAPI-Specification/blob/main/versions/2.0.md
+---
+definitions:
+  Item:
+    description: Similar to `concept`.
+    type: object
+    properties:
+      id:
+        type: integer
+      lang:
+        type: string
+      ref_name:
+        type: string
+      name:
+        type: string
+  Token:
+    description: Linguistic unit. Similar to `word` but can have inner structure.
+    type: object
+    properties:
+      lang:
+        type: string
+      string:
+        type: string
+      tree:
+        type: array
+      inflections:
+        type: array
+        items:
+          type: object
+
+  Language:
+    description: Some selected items that can be called a kind of `language`.
+    type: object
+    properties:
+      id:
+        type: integer
+      lang:
+        type: string
+      ref_name:
+        type: string
+      name:
+        type: string
+      labels:
+        type: array
+        items:
+          type: string
+
+  Category:
+    description: Some selected items that can be called a `category`.
+    type: object
+    properties:
+      id:
+        type: integer
+      lang:
+        type: string
+      ref_name:
+        type: string
+      name:
+        type: string
+      sups:
+        description: ref_names of supper categories.
+        type: array
+
+  Type:
+    description: Some selected items that can be called a `type`.
+    type: object
+    properties:
+      id:
+        type: integer
+      lang:
+        type: string
+      ref_name:
+        type: string
+      name:
+        type: string
+
+  Property:
+    description: Some selected items that can be called a `property`. Can be mapped to some EvaluationMoulds.
+    type: object
+    properties:
+      id:
+        type: integer
+      lang:
+        type: string
+      ref_name:
+        type: string
+      name:
+        type: string
+
+  Feature:
+    description: Some selected items that can be called a `feature`. Can be mapped to some StatementMoulds.
+    type: object
+    properties:
+      id:
+        type: integer
+      lang:
+        type: string
+      ref_name:
+        type: string
+      name:
+        type: string
+
+  Relation:
+    description: The relation between **TWO and just TWO** items. Similar to `Frame`.
+    type: object
+    properties:
+      id:
+        type: integer
+      lang:
+        type: string
+      ref_name:
+        type: string
+      name:
+        type: string
+      arg0:
+        description: The role of the primary participant of the relation.
+        type: object
+        properties:
+          ref_name:
+            type: string
+          name:
+            type: string
+      arg1:
+        description: The role of the secondary participant of the relation.
+        type: object
+        properties:
+          ref_name:
+            type: string
+          name:
+            type: string
+      edge:
+        description: The description of the link between the two participants of the relation.
+        type: object
+        properties:
+          ref_name:
+            type: string
+          name:
+            type: string
+
+  Statement:
+    description: ...
+    type: object
+    properties:
+      mould_id:
+        type: integer
+      args:
+        type: array
+  StatementMould:
+    description: ...
+    type: object
+    properties:
+      lang:
+        type: string
+      slots:
+        type: array
+
+  Event:
+    description: ...
+    type: object
+  EventMould:
+    description: ...
+    type: object
+
+  Evaluation:
+    description: ...
+    type: object
+  EvaluationMould:
+    description: ...
+    type: object
+  EvaluationChoice:
+    description: ...
+    type: object
+
+  Frame:
+    description: Each two of the elements have a relation specified by the frame.
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      face:
+        type: string
+      elements:
+        type: array
+        items:
+          $ref: '#/definitions/FrameElement'
+  FrameElement:
+    description: ...
+    type: object
+    properties:
+      name:
+        type: string
+
+  StatementSheet:
+    description: An answersheet for a Statement submitted by a user.
+    type: object
+    properties:
+      id:
+        type: integer
+      user_id:
+        type: integer
+      statement_id:
+        type: integer
+      args:
+        type: array
+
+  EvaluationSheet:
+    description: An answersheet for an Evaluation submitted by a user.
+    type: object
+    properties:
+      id:
+        type: integer
+      user_id:
+        type: integer
+      evaluation_id:
+        type: integer
+      choices:
+        type: array
+
+
+
+  MongoRequestData:
+    description: ...
+    properties:
+      filter:
+        type: object
+        required: true
+      kwargs:
+        type: object
+        required: false
+        properties:
+          projection:
+            type: array
+          skip:
+            type: integer
+          limit:
+            type: integer
+          no_cursor_timeout:
+            type: boolean
+          sort:
+            type: array
+          batch_size:
+            type: integer
+          return_key:
+            type: boolean
+          max_time_ms:
+            type: integer
+          max_scan:
+            type: integer
+          min:
+            type: array
+          max:
+            type: array
+          comment:
+            type: string
