@@ -19,6 +19,7 @@ export default function Home() {
     {label: '答题', path: 'teach'},
     {label: '检索条目', path: 'item'},
     {label: '检索断言', path: 'assertion'},
+    {label: '用户', path: 'user'},
   ];
   return vNode('div', {className: 'app'}, [
     vNode(MyMenu, {active, setActive, options}),
