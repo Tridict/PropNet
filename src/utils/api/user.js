@@ -17,3 +17,8 @@ export async function register(params) {
   }
   return data;
 }
+
+export async function logout() {
+  storage.removeItem("access_token");
+  storage.removeItem("refresh_token");
+}

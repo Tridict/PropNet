@@ -3,6 +3,7 @@ import ReactRouterDom from "../vendor/react-router-dom.js";
 import Home from "./views/home/home.js";
 import Teach from "./views/teach/teach.js";
 import User from "./views/user/user.js";
+import Login from "./views/user/login.js";
 import Item, {loader as itemLoader, ItemDetail} from "./views/item/item.js";
 import ErrorPage from "./views/error-page/error-page.js";
 import { ThemeContext, themes } from "./utils/theme.js";
@@ -34,6 +35,10 @@ const router = ReactRouterDom.createHashRouter([
         // User
         path: "user",
         element: vNode(User),
+      },
+      {
+        path: "login",
+        element: vNode(Login),
       },
       // {
       //   // 断言检索页

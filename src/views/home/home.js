@@ -20,7 +20,7 @@ export default function Home() {
     {label: '检索条目', path: 'item'},
     {label: '检索断言', path: 'assertion'},
   ];
-  return vNode('div', null, [
+  return vNode('div', {className: 'app'}, [
     vNode(MyMenu, {active, setActive, options}),
     vNode(ReactRouterDom.Outlet),
   ]);
