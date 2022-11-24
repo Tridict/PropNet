@@ -1,7 +1,8 @@
-import { createElement as vNode } from "../../../vendor/react.js";
+import { createElement as vNode, useState } from "../../../vendor/react.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
-import { Form, Input, Button, Tabs, MessagePlugin } from "../../../vendor/tdesign.min.js";
+import { Form, Input, Button, Tabs, MessagePlugin, Switch, Space } from "../../../vendor/tdesign.min.js";
 import { login, register } from "../../utils/api/user.js";
+import storage from "../../utils/stores.js";
 
 const { FormItem } = Form;
 const { TabPanel } = Tabs;
@@ -11,6 +12,7 @@ const { useNavigate } = ReactRouterDom;
 export function Login() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const [checkedRememberUser, setCheckedRememberUser] = useState(true);
 
   const rules = {
     'account': [{ required: true, message: '必填', type: 'error' }],
@@ -19,6 +21,11 @@ export function Login() {
 
   const onSubmit = async (e) => {
     if (e.validateResult === true) {
+      if (checkedRememberUser) {
+        storage.setItem('cache_account', form.getFieldValue('account'));
+      } else {
+        storage.removeItem('cache_account');
+      }
       const data = await login(form.getFieldsValue(['account','password']));
       console.log(data);
       if (data.access_token) {
@@ -37,25 +44,38 @@ export function Login() {
 
   };
 
+  const onToggleRememberUser = (value) => {
+    setCheckedRememberUser(value);
+  }
+
   return vNode(Form, {
         form,
         onSubmit,
         onReset,
         colon: true,
         rules,
-      }, [
-        vNode(FormItem, {name: 'account'}, 
+      }, vNode(Space, {direction: 'vertical'}, [
+        vNode(FormItem, {name: 'account', initialData: storage.getItem('cache_account')}, 
           vNode(Input, {
             placeholder: '请输入账户名',
+            autocomplete: 'username',
           })
         ),
         vNode(FormItem, {name: 'password'}, 
           vNode(Input, {
             type: 'password',
             placeholder: '请输入密码',
+            autocomplete: 'current-password',
           })
         ),
-        vNode(FormItem, null, [
+        vNode(Space, null, [
+          '记住用户名',
+          vNode(Switch, {
+            value: checkedRememberUser,
+            onChange: onToggleRememberUser,
+          })]
+        ),
+        vNode(FormItem, null, vNode(Space, null, [
           vNode(Button, {
             theme: 'primary',
             type: 'submit',
@@ -65,8 +85,8 @@ export function Login() {
             type: 'reset',
             variant: 'base',
           }, '重置'),
-        ])
-      ]);
+        ]))
+      ]));
 }
 
 export function Register() {
@@ -118,7 +138,7 @@ export function Register() {
         onSubmit,
         onReset,
         rules,
-      }, [
+      },  vNode(Space, {direction: 'vertical'}, [
     vNode(FormItem, {name: 'email'}, [
       vNode(Input, {
         placeholder: '请输入您的email',
@@ -133,6 +153,7 @@ export function Register() {
       vNode(Input, {
         type: 'password',
         placeholder: '请输入密码',
+        autocomplete: 'current-password',
       })
     ]),
     vNode(FormItem, {name: 'rePassword'}, [
@@ -146,11 +167,11 @@ export function Register() {
         theme: 'primary',
         type: 'submit',
       }, '注册'))
-  ]);
+  ]));
 }
 
 export default function LoginHome() {
-  return vNode(Tabs, {defaultValue: 1}, [
+  return vNode(Tabs, {defaultValue: 1, className: 'login'}, [
     vNode(TabPanel, {value: 1, label: '登录'}, vNode(Login)),
     vNode(TabPanel, {value: 2, label: '注册'}, vNode(Register)),
   ]);

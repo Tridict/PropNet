@@ -4,9 +4,11 @@ import storage from "../stores.js";
 export async function login(params) {
   const res = await request.post(`/api/user/actions/login`, params)
   const data = await res.json();
-  storage.setItem("access_token", data?.access_token);
-  storage.setItem("refresh_token", data?.refresh_token);
-  storage.setItem("current_user", params.account);
+  if (data?.access_token) {
+    storage.setItem("access_token", data?.access_token);
+    storage.setItem("refresh_token", data?.refresh_token);
+    storage.setItem("current_user", params.account);
+  }
   return data;
 }
 

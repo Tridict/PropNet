@@ -1,1 +1,27 @@
 @import './views/teach/teach.css';
+@import './views/user/user.css';
+@import './views/home/home.css';
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  padding: 0 10px;
+  border-bottom: solid 1px rgb(193, 187, 187);
+}
+
+.t-head-menu {
+  max-width: 1688px;
+}
+
+main {
+  padding: 10px;
+  min-height: 80vh;
+  max-width: 1688px;
+}
+
+.t-menu > a {
+  text-decoration: none;
+}
