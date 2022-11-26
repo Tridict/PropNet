@@ -8,7 +8,8 @@ class Request {
     this.config = config;
   }
 
-  static async wrapResponse(resp) {
+  async wrapResponse(resp) {
+    // console.log(resp);
     const content_type = resp?.headers?.get("content-type") ?? "";
     const wrapped = {
       // resp: resp,
@@ -23,20 +24,37 @@ class Request {
     if (!!content_type.toLowerCase().includes("html")) {
       wrapped.isHtml = true;
     };
+    const wrapped_text = await resp.text();
     if (wrapped.isJson) {
       try {
-        wrapped.data = await resp.json();
+        wrapped.data = JSON.parse(wrapped_text);
       } catch(err) {
         wrapped.errorJson = true;
-        wrapped.text = await resp.text();
+        wrapped.text = wrapped_text;
       };
     } else {
-      wrapped.text = await resp.text();
+      wrapped.text = wrapped_text;
     };
     return wrapped;
   }
 
-  async request(path, params) {
+  async ensureAccessByRefresh(wrapped) {
+    if (wrapped.status==401&&wrapped?.data?.msg=="Token has expired") {
+      const wrapped_access_token = await this.post('/api/user/actions/refresh', null, {
+        headers: {
+          'authorization': `Bearer ${storage.getItem("refresh_token")}`,
+        },
+      });
+      // const wrapped_access_token = this.wrapResponse(access_token_resp);
+      if (wrapped_access_token?.data?.data!=null) {
+        storage.setItem('access_token', wrapped_access_token.data.data);
+        return true;
+      };
+    };
+    return false;
+  }
+
+  async request(path, params, callback, retryCount=1) {
     try {
       const access_token = storage.getItem("access_token");
       if (access_token?.length) {
@@ -47,7 +65,7 @@ class Request {
               'X-CSRF-TOKEN': access_token,
             },
           });
-        } else {
+        } else if (!params.headers.authorization) {
           Object.assign(params.headers, {
             'authorization': `Bearer ${access_token}`,
             'X-CSRF-TOKEN': access_token,
@@ -55,7 +73,17 @@ class Request {
         };
       };
       const res = await fetch(baseUrl + path, params);
-      return res;
+      const wrapped = await this.wrapResponse(res);
+      if (retryCount>0) {
+        const refreshed = await this.ensureAccessByRefresh(wrapped);
+        if (refreshed) {
+          console.log("refreshed");
+          params.headers.authorization = null;
+          return this.request(path, params, callback, retryCount-1);
+        };
+      };
+      callback?.({path, params, wrapped});
+      return wrapped;
       // if (res?.ok || res?.status==200) {
       //   return await res?.json?.();
       // } else if (res?.statusText) {
@@ -69,29 +97,33 @@ class Request {
     }
   }
 
-  async get(path, config={}) {
+  async get(path, config={}, callback) {
     const params = {
       method: 'GET',
-      ...config,
       ...this.config,
+      ...config,
     };
-    return await this.request(path, params);
+    return await this.request(path, params, callback);
   }
 
-  async post(path, data, config={}) {
+  async post(path, data, config={}, callback) {
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(this.config?.headers||{}),
+      ...(config.headers||{}),
+    }
     const params = {
       method: 'POST',
-      ...config,
-      ...this.config,
-      headers: {
-        'Content-Type': 'application/json',
-      },
       body: JSON.stringify(data),
+      ...this.config,
+      ...config,
+      headers,
     }
-    return await this.request(path, params);
+
+    return await this.request(path, params, callback);
   }
 
-  async put(path, data, config={}) {
+  async put(path, data, config={}, callback) {
     const params = {
       method: 'PUT',
       ...config,
@@ -101,10 +133,10 @@ class Request {
       },
       body: JSON.stringify(data),
     }
-    return await this.request(path, params);
+    return await this.request(path, params, callback);
   }
 
-  async patch(path, data, config={}) {
+  async patch(path, data, config={}, callback) {
     const params = {
       method: 'PATCH',
       ...config,
@@ -114,7 +146,7 @@ class Request {
       },
       body: JSON.stringify(data),
     }
-    return await this.request(path, params);
+    return await this.request(path, params, callback);
   }
 }
 

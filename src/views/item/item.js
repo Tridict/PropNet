@@ -24,7 +24,7 @@ export function ItemDetail() {
   console.log(data);
   return vNode(Fragment, null, [
     vNode('p', null, '该条目不存在, 是否创建？'),
-    vNode(Button, null, '创建条目'),
-    vNode(ReactRouterDom.Link, {to: '../item'}, vNode(Button, null, '返回查询')),
+    vNode(ReactRouterDom.Link, {to: '../item-create'}, vNode(Button, null, '创建条目')),
+    vNode(ReactRouterDom.Link, {to: '../items'}, vNode(Button, null, '返回查询')),
   ])
 }

@@ -3,8 +3,11 @@ import ReactRouterDom from "../vendor/react-router-dom.js";
 import Home from "./views/home/home.js";
 import Teach from "./views/teach/teach.js";
 import User from "./views/user/user.js";
+import King from "./views/king/king.js";
+import Dev from "./views/dev/dev.js";
 import Login from "./views/user/login.js";
 import Item, {loader as itemLoader, ItemDetail} from "./views/item/item.js";
+import ItemCreatePage from "./views/item/itemCreate.js";
 import ErrorPage from "./views/error-page/error-page.js";
 import { ThemeContext, themes } from "./utils/theme.js";
 
@@ -16,14 +19,19 @@ const router = ReactRouterDom.createHashRouter([
     children: [
       {
         // 条目检索页，查询结果页为?kw=key_word
-        path: "item",
+        path: "items",
         element: vNode(Item),
       },
       {
         // 条目详情页
-        path: "item/:face",
+        path: "items/:face",
         element: vNode(ItemDetail),
         loader: itemLoader,
+      },
+      {
+        // 条目创建页
+        path: "item-create",
+        element: vNode(ItemCreatePage),
       },
       // 条目创建页 additem/
       {
@@ -40,14 +48,25 @@ const router = ReactRouterDom.createHashRouter([
         path: "login",
         element: vNode(Login),
       },
+      {
+        path: "king",
+        element: vNode(King),
+      },
       // {
       //   // 断言检索页
       //   path: "assertion",
       //   element: vNode(Assertion),
       // },
+      {
+        // 开发页
+        path: "dev",
+        element: vNode(Dev),
+      },
     ]
   },
-])
+]);
+
+console.log('router\n', router);
 
 export function MyApp() {
   return vNode(ThemeContext.Provider, 

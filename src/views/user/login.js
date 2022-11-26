@@ -30,7 +30,7 @@ export function Login() {
       console.log(data);
       if (data.access_token) {
         MessagePlugin.success('登录成功');
-        navigate('/user');
+        navigate('../user');
       } else if (data.msg) {
         MessagePlugin.error(data.msg);
       }
@@ -107,7 +107,7 @@ export function Register() {
     email: [{ required: true, message: '必填', type: 'error' }, 
             { email: { ignore_max_length: true }, message: '请输入正确的邮箱格式', type: 'error' }],
     username: [{ required: true, message: '必填', type: 'error' },
-               { max: 20, message: '请不要超过30个字', type: 'error' }],
+               { max: 20, message: '请不要超过20个字', type: 'error' }],
     password: [{ required: true, message: '必填', type: 'error' }, 
                { min: 6, message: '至少需要6位数', type: 'error' }],
     rePassword: [{ validator: rePasswordValidator, message: '两次密码不一致' }],

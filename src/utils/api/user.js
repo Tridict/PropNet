@@ -2,8 +2,8 @@ import { request } from "./request.js";
 import storage from "../stores.js";
 
 export async function login(params) {
-  const res = await request.post(`/api/user/actions/login`, params)
-  const data = await res.json();
+  const wrapped = await request.post(`/api/user/actions/login`, params)
+  const data = wrapped.data;
   if (data?.access_token) {
     storage.setItem("access_token", data?.access_token);
     storage.setItem("refresh_token", data?.refresh_token);
@@ -13,13 +13,11 @@ export async function login(params) {
 }
 
 export async function register(params) {
-  const res = await request.post(`/api/user/actions/register`, params);
-  const data = await res.json();
-  if (res.ok) {
-    data.ok = true;
+  const wrapped = await request.post(`/api/user/actions/register`, params);
+  if (wrapped?.ok) {
     await login({account: params.username, password: params.password})
   }
-  return data;
+  return wrapped;
 }
 
 export async function logout() {

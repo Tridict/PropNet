@@ -12,13 +12,13 @@ export default function User() {
 
   useEffect(() => {
     if (!username) {
-      navigate('/login');
+      navigate('../login');
     }
   });
 
   function handleLogout() {
     logout();
-    navigate('/login');
+    navigate('../login');
   } 
   return vNode('div', null, [
     vNode('p', null, '欢迎，'+username+'！'),
