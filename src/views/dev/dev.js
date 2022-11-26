@@ -56,6 +56,10 @@ export default function Dev() {
       name: "获取当前用户信息",
       theme: "danger",
     },
+    {
+      name: "获取当前用户的操作记录",
+      theme: "warning",
+    },
   ];
 
   return vNode('div', {
