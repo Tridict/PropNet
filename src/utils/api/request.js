@@ -8,6 +8,34 @@ class Request {
     this.config = config;
   }
 
+  static async wrapResponse(resp) {
+    const content_type = resp?.headers?.get("content-type") ?? "";
+    const wrapped = {
+      // resp: resp,
+      ok: resp?.ok,
+      status: resp?.status,
+      statusText: resp?.statusText,
+      "content-type": resp?.headers?.["content-type"] ?? "",
+    };
+    if (!!content_type.toLowerCase().includes("json")) {
+      wrapped.isJson = true;
+    };
+    if (!!content_type.toLowerCase().includes("html")) {
+      wrapped.isHtml = true;
+    };
+    if (wrapped.isJson) {
+      try {
+        wrapped.data = await resp.json();
+      } catch(err) {
+        wrapped.errorJson = true;
+        wrapped.text = await resp.text();
+      };
+    } else {
+      wrapped.text = await resp.text();
+    };
+    return wrapped;
+  }
+
   async request(path, params) {
     try {
       const access_token = storage.getItem("access_token");
