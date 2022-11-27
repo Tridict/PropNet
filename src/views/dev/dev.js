@@ -90,6 +90,11 @@ export default function Dev() {
       fn: ()=>{goto('../item-create');},
     },
     {
+      theme: "danger",
+      name: "Edge创建页",
+      fn: ()=>{goto('../edge-create');},
+    },
+    {
       name: "获取10个新鲜条目",
     },
     {

@@ -7,8 +7,9 @@ import King from "./views/king/king.js";
 import Dev from "./views/dev/dev.js";
 import Doc from "./views/doc/doc.js";
 import Ground from "./views/ground/ground.js";
+import { EdgeCreatePage } from "./views/primitives/edge.js";
 import Login from "./views/user/login.js";
-import Item, {loader as itemLoader, ItemDetail} from "./views/item/item.js";
+import Items, {loader as itemLoader, ItemDetail} from "./views/item/items.js";
 import ItemCreatePage from "./views/item/itemCreate.js";
 import ErrorPage from "./views/error-page/error-page.js";
 import { ThemeContext, themes } from "./utils/theme.js";
@@ -22,7 +23,7 @@ const router = ReactRouterDom.createHashRouter([
       {
         // 条目检索页，查询结果页为?kw=key_word
         path: "items",
-        element: vNode(Item),
+        element: vNode(Items),
       },
       {
         // 条目详情页
@@ -34,6 +35,11 @@ const router = ReactRouterDom.createHashRouter([
         // 条目创建页
         path: "item-create",
         element: vNode(ItemCreatePage),
+      },
+      {
+        // edge创建页
+        path: "edge-create",
+        element: vNode(EdgeCreatePage),
       },
       // 条目创建页 additem/
       {

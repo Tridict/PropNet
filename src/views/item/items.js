@@ -3,7 +3,12 @@ import ReactRouterDom from "../../../vendor/react-router-dom.js";
 import { Input, Button } from "../../../vendor/tdesign.min.js";
 import { getItemByFace } from "../../utils/api/item.js";
 
-export default function SearchItem() {
+export default function Items() {
+  // 暂时
+  return vNode(SearchItem);
+}
+
+export function SearchItem() {
   const [value, onChange] = useState('');
   return vNode('div', null, [
     vNode('p', null, '请输入您要搜索的条目'),
