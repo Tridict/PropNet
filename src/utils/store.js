@@ -1,4 +1,4 @@
-const appName = 'propNet'
+const appName = 'featureNet'
 const defaultType = 'local'  // 'local' || 'session'
 
 function _serialize(obj) {

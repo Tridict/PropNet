@@ -1,5 +1,5 @@
 import { request } from "./request.js";
-import storage from "../stores.js";
+import storage from "../store.js";
 
 export async function login(params) {
   const wrapped = await request.post(`/api/user/actions/login`, params)

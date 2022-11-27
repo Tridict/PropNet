@@ -78,7 +78,7 @@ const router = ReactRouterDom.createHashRouter([
   },
 ]);
 
-console.log('router\n', router);
+// console.log('router\n', router);
 
 export function MyApp() {
   return vNode(ThemeContext.Provider, 

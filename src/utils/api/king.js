@@ -1,5 +1,5 @@
 import { request } from "./request.js";
-import storage from "../stores.js";
+import storage from "../store.js";
 import {
     MessagePlugin,
   } from "../../../vendor/tdesign.min.js";

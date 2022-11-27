@@ -1,4 +1,4 @@
-import storage from "../stores.js";
+import storage from "../store.js";
 
 const baseUrl = 'http://192.168.0.101:8000';
 

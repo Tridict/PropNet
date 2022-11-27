@@ -2,7 +2,7 @@ import { createElement as vNode, useEffect } from "../../../vendor/react.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
 import { Button, Tooltip } from "../../../vendor/tdesign.min.js";
 import { logout } from "../../utils/api/user.js";
-import storage from "../../utils/stores.js";
+import storage from "../../utils/store.js";
 
 import makeButtonGroup from "../../components/buttonGroup.js";
 

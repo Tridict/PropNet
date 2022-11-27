@@ -1,6 +1,6 @@
 import { createElement as vNode, useEffect } from "../../../vendor/react.js";
 import { opreation } from "../../utils/api/king.js";
-import storage from "../../utils/stores.js";
+import storage from "../../utils/store.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
 import {
   Form,

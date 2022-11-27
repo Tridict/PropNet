@@ -1,6 +1,7 @@
 import { createElement as vNode, useEffect, useState } from "../../../vendor/react.js";
 import { opreation } from "../../utils/api/king.js";
-import storage from "../../utils/stores.js";
+import storage from "../../utils/store.js";
+import { postItems } from "../../utils/api/item.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
 import {
   Form,
@@ -37,6 +38,7 @@ export default function ItemCreatePage() {
     { label: '普通话', value: 'zh-cn' },
     { label: '美式英语', value: 'en-us' },
     { label: '元语言', value: 'FN-Meta' },
+    { label: '(留空)', value: null },
   ]);
   const onChangeLang = (value) => {
     setLang(value);
@@ -94,7 +96,11 @@ export default function ItemCreatePage() {
       const data = form.getFieldsValue(["lang", "name", "knownCategory", "customCategory"]);
       storage.setItem('lang_of_last_created_item', form.getFieldValue("lang"));
       console.log(evt);
+      console.log(data);
       MessagePlugin.info(JSON.stringify(data));
+      const wrapped = await postItems([data]);
+      console.log(wrapped);
+      MessagePlugin.info(JSON.stringify(wrapped));
     };
   };
   const onReset = async (evt) => {
@@ -132,30 +138,31 @@ export default function ItemCreatePage() {
       options: langOptions,
       filterable: true,
       creatable: true,
+      clearable: true,
       onCreate: onCreateLang,
     })),
 
-    vNode(FormItem, {
-      label: "所属分类(预设)",
-      name: "knownCategory",
-    }, vNode(Cascader, {
-      options: knownCategoryOptions,
-      value: knownCategory,
-      onChange: onChangeKnownCategory,
-      multiple: true,
-      clearable: true,
-      filterable: true,
-    })),
+    // vNode(FormItem, {
+    //   label: "所属分类(预设)",
+    //   name: "knownCategory",
+    // }, vNode(Cascader, {
+    //   options: knownCategoryOptions,
+    //   value: knownCategory,
+    //   onChange: onChangeKnownCategory,
+    //   multiple: true,
+    //   clearable: true,
+    //   filterable: true,
+    // })),
 
-    vNode(FormItem, {
-      label: "所属分类(自定义)",
-      name: "customCategory",
-    }, vNode(TagInput, {
-      value: customCategory,
-      onChange: onChangeCustomCategory,
-      onPaste: onPasteCustomCategory,
-      onEnter: onEnterCustomCategory,
-    })),
+    // vNode(FormItem, {
+    //   label: "所属分类(自定义)",
+    //   name: "customCategory",
+    // }, vNode(TagInput, {
+    //   value: customCategory,
+    //   onChange: onChangeCustomCategory,
+    //   onPaste: onPasteCustomCategory,
+    //   onEnter: onEnterCustomCategory,
+    // })),
 
     // vNode(FormItem, {
     //   label: "ref_name",

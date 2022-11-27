@@ -2,7 +2,7 @@ import { createElement as vNode, useState } from "../../../vendor/react.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
 import { Form, Input, Button, Tabs, MessagePlugin, Switch, Space } from "../../../vendor/tdesign.min.js";
 import { login, register } from "../../utils/api/user.js";
-import storage from "../../utils/stores.js";
+import storage from "../../utils/store.js";
 
 const { FormItem } = Form;
 const { TabPanel } = Tabs;
