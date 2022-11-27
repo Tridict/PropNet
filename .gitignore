@@ -1,3 +1,7 @@
 node_modules
 yarn.lock
 package.json
+
+
+.Ds_Store
+
