@@ -25,13 +25,14 @@ import {
 const { FormItem, FormList } = Form;
 
 function FrameSlot({remove, refnameValidator, key, idx, name, ...restField}) {
-  return vNode('div', {key}, [
-    vNode(Divider, {align: 'left'}, ['slot'+idx, 
-      // vNode(CloseIcon),
-      vNode(Button, {theme: "danger",  onClick: ()=>remove(name)}, '-'),
-    ]), 
+  return vNode(FormItem, {key}, [
+    // vNode(Divider, {align: 'left'}, ['slot'+idx, 
+    //   // vNode(CloseIcon),
+    //   vNode(Button, {theme: "danger",  onClick: ()=>remove(name)}, '-'),
+    // ]), 
     vNode(FormItem, {
       ...restField,
+      className: "d-none",
       label: "lang",
       name: [name, "lang"],
       initialData: "FN-Meta",
@@ -47,6 +48,7 @@ function FrameSlot({remove, refnameValidator, key, idx, name, ...restField}) {
       label: "desc",
       name: [name, "desc"],
     }, vNode(Input)),
+    vNode(FormItem, null, vNode(Button, {theme: "danger",  onClick: ()=>remove(name)}, '-')),
   ])
 }
 
@@ -55,6 +57,7 @@ function FrameRelation({remove, key, idx, name, ...restField}) {
     vNode(Divider, {}, 'relation'+idx), 
     vNode(FormItem, {
       ...restField,
+      className: "d-none",
       label: "lang",
       name: [name, "lang"],
       initialData: "FN-Meta",
