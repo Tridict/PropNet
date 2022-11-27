@@ -8,6 +8,7 @@ import Dev from "./views/dev/dev.js";
 import Doc from "./views/doc/doc.js";
 import Ground from "./views/ground/ground.js";
 import { EdgeCreatePage } from "./views/primitives/edge.js";
+import { FrameCreatePage } from "./views/primitives/frame.js";
 import Login from "./views/user/login.js";
 import Items, {loader as itemLoader, ItemDetail} from "./views/item/items.js";
 import ItemCreatePage from "./views/item/itemCreate.js";
@@ -40,6 +41,11 @@ const router = ReactRouterDom.createHashRouter([
         // edge创建页
         path: "edge-create",
         element: vNode(EdgeCreatePage),
+      },
+      {
+        // frame创建页
+        path: "frame-create",
+        element: vNode(FrameCreatePage),
       },
       // 条目创建页 additem/
       {

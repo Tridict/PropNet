@@ -95,6 +95,11 @@ export default function Dev() {
       fn: ()=>{goto('../edge-create');},
     },
     {
+      theme: "danger",
+      name: "Frame创建页",
+      fn: ()=>{goto('../frame-create');},
+    },
+    {
       name: "获取10个新鲜条目",
     },
     {
