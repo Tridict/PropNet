@@ -1,8 +1,8 @@
 import { createElement as vNode, useEffect, useState } from "../../../vendor/react.js";
 // import ReactRouterDom from "../../../vendor/react-router-dom.js";
-// import { opreation } from "../../utils/api/king.js";
+import { getEdges } from "../../utils/api/edge.js";
+import { postFrame } from "../../utils/api/frame.js";
 import storage from "../../utils/store.js";
-import { postItems } from "../../utils/api/item.js";
 import {
   Form,
   Input,
@@ -21,15 +21,12 @@ import {
   Divider,
   Tabs,
 } from "../../../vendor/tdesign.min.js";
-// import { CloseIcon } from '../../../vendor/tdesign-icons-react/index.js';
+// import TDesignIcons from '../../../vendor/tdesign-icons-react.js';
+// const { MinusCircleIcon } = TDesignIcons;
 const { FormItem, FormList } = Form;
 
 function FrameSlot({remove, refnameValidator, key, idx, name, ...restField}) {
   return vNode(FormItem, {key}, [
-    // vNode(Divider, {align: 'left'}, ['slot'+idx, 
-    //   // vNode(CloseIcon),
-    //   vNode(Button, {theme: "danger",  onClick: ()=>remove(name)}, '-'),
-    // ]), 
     vNode(FormItem, {
       ...restField,
       className: "d-none",
@@ -48,13 +45,13 @@ function FrameSlot({remove, refnameValidator, key, idx, name, ...restField}) {
       label: "desc",
       name: [name, "desc"],
     }, vNode(Input)),
-    vNode(FormItem, null, vNode(Button, {theme: "danger",  onClick: ()=>remove(name)}, '-')),
+    vNode(FormItem, null, vNode(Button, {theme: "danger", variant:"dashed",  onClick: ()=>remove(name)}, '删')),
   ])
 }
 
-function FrameRelation({remove, key, idx, name, ...restField}) {
-  return vNode('div', {key}, [
-    vNode(Divider, {}, 'relation'+idx), 
+function FrameRelation({remove, relationSlotValidator, edgeOptions, key, idx, name, ...restField}) {
+  return vNode(FormItem, {key}, [
+    // vNode(Divider, {}, 'relation'+idx), 
     vNode(FormItem, {
       ...restField,
       className: "d-none",
@@ -64,21 +61,23 @@ function FrameRelation({remove, key, idx, name, ...restField}) {
     }, vNode(Input, {disabled: true,})),
     vNode(FormItem, {
       ...restField,
-      label: "edge_ref_name",
+      label: "edge",
       name: [name, "edge_ref_name"],
-    }, vNode(Input)),
+    }, vNode(Select, {options: edgeOptions})),
     vNode(FormItem, {
       ...restField,
-      label: "slot0_ref_name",
+      label: "slot0",
       name: [name, "slot0_ref_name"],
+      rules: [{ required: true, type: 'error' },{validator: relationSlotValidator, message: 'ref_name不存在，请先添加slot'}],
     }, vNode(Input)),
     vNode(FormItem, {
       ...restField,
-      label: "slot1_ref_name",
+      label: "slot1",
       name: [name, "slot1_ref_name"],
+      rules: [{ required: true, type: 'error' },{validator: relationSlotValidator, message: 'ref_name不存在，请先添加slot'}],
     }, vNode(Input)),
     vNode(FormItem, null, [
-      vNode(Button, {theme: "danger", variant: "dashed", onClick: ()=>remove(name)}, 'remove')]),
+      vNode(Button, {theme: "danger", variant: "dashed", onClick: ()=>remove(name)}, '删')]),
   ])
 }
 
@@ -89,20 +88,25 @@ export function FrameCreatePage() {
   const [form] = Form.useForm();
   // const symmetric = Form.useWatch('symmetric', form);
 
-  // useEffect(()=>{
-  //   form.setFieldsValue({
-  //     lang: lang_of_last_created_item,
-  //   });
-  // }, []);
+  // const [edge, setEdge] = useState('');
+  const [edgeOptions, changeEdgeOptions] = useState([
+    { label: '丈夫-夫妇-妻子', value: '夫妇'},
+    { label: '父亲-feiowjfieowjfo-孩子', value: 'feiowjfieowjfo'},
+    { label: '母亲-32jriojdewio-孩子', value: '32jriojdewio'},
+   ]);
+  // const onChangeEdge = (value) => {
+  //   setEdge(value);
+  // };
 
-  const [edge, setEdge] = useState('');
-  const [edgeOptions, changeEdgeOptions] = useState([]);
-  const onChangeEdge = (value) => {
-    setEdge(value);
-  };
-  const onCreateEdge = (value) => {
-    changeEdgeOptions(edgeOptions.concat([{ value, label: value }]));
-  };
+  useEffect(async()=>{
+    // 初始化 edgeOptions 的数据
+    const edges = await getEdges();
+    changeEdgeOptions(edges);
+
+    // form.setFieldsValue({
+    //   lang: lang_of_last_created_item,
+    // });
+  }, []);
 
   const onSubmit = async (evt) => {
     if (evt.validateResult === true) {
@@ -111,7 +115,7 @@ export function FrameCreatePage() {
       console.log(evt);
       console.log(data);
       MessagePlugin.info(JSON.stringify(data));
-      const wrapped = await postItems([data]);
+      const wrapped = await postFrame([data]);
       console.log(wrapped);
       MessagePlugin.info(JSON.stringify(wrapped));
     };
@@ -122,20 +126,25 @@ export function FrameCreatePage() {
   };
 
 
-  // 自定义异步校验器
+  // 校验：slots的ref_name不可重复
   function refnameValidator(val) {
     return new Promise((resolve) => {
       const timer = setTimeout(() => {
-        const {slots} = form.getFieldsValue(true);
+        const data = form.getFieldsValue(true);
+        const {slots} = data;
         let hasSame = false;
 
         const ref_names = {};
-        let curr;
+        let curr = data.ref_name;
+        if (curr != undefined) {
+          ref_names[curr] = 1;
+        }
         for (const key in slots) {
           curr = slots?.[key]?.ref_name;
           if (curr != undefined) {
             if (curr in ref_names) {
               hasSame = true;
+              break;
             }
             ref_names[curr] = 1;
           }
@@ -146,6 +155,17 @@ export function FrameCreatePage() {
     });
   }
 
+  // 校验：slot{id}_ref_name必须从slots中选
+  function relationSlotValidator(val) {
+    return new Promise((resolve) => {
+      const timer = setTimeout(() => {
+        const {slots} = form.getFieldsValue(true);
+        const ref_names = slots.map(x=>x.ref_name);
+        resolve(ref_names.includes(val));
+        clearTimeout(timer);
+      });
+    });
+  }
 
   return vNode(Form, {
     form: form,
@@ -154,6 +174,25 @@ export function FrameCreatePage() {
     onSubmit,
     onReset,
   }, [
+    vNode(FormItem, {
+      label: 'lang',
+      name: "lang",
+      initialData: "FN-Meta",
+    }, vNode(Input, {disabled: true,})),
+
+    vNode(FormItem, {
+      label: "名称",
+      name: "ref_name",
+      rules: [{required: true},{validator: refnameValidator, message: 'ref_name不能重复'}],
+    }, vNode(Input)),
+
+    vNode(FormItem, {
+      label: "desc",
+      name: "desc",
+    }, vNode(Input)),
+
+    vNode(Divider),
+
     vNode(FormList, {name: 'slots'}, (fields, { add, remove }) => (vNode('div', null, 
       [...fields.map(
         ({ key, name, ...restField }, idx) => vNode(FrameSlot, {
@@ -166,14 +205,18 @@ export function FrameCreatePage() {
         }),
       ),
       vNode(FormItem, null, 
-        vNode(Button, {variant:"dashed", onClick: ()=>add({ref_name: '', desc: ''})}, 'Add slot')),
+        vNode(Button, {theme: 'default', variant:"base", onClick: ()=>add({ref_name: '', desc: ''})}, 'Add slot')),
       ]
     ))),
+
+    vNode(Divider),
 
     vNode(FormList, {name: 'relations'}, (fields, { add, remove }) => (vNode('div', null, 
       [...fields.map(
         ({ key, name, ...restField }, idx) => vNode(FrameRelation, {
           remove,
+          relationSlotValidator,
+          edgeOptions,
           key,
           idx,
           name,
@@ -181,14 +224,11 @@ export function FrameCreatePage() {
         }),
       ),
       vNode(FormItem, null, 
-        vNode(Button, {variant:"dashed", onClick: ()=>add({ref_name: '', desc: ''})}, 'Add relation')),
+        vNode(Button, {theme: 'default', variant:"base", onClick: ()=>add({ref_name: '', desc: ''})}, 'Add relation')),
       ]
     ))),
 
-    // vNode(FormItem, {
-    //   label: "symmetric",
-    //   name: "symmetric",
-    // }, vNode(Switch)),
+    vNode(Divider),
 
     vNode(FormItem, {
       name: "submitButton",
