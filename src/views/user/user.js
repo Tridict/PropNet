@@ -4,6 +4,8 @@ import { Button, Tooltip } from "../../../vendor/tdesign.min.js";
 import { logout } from "../../utils/api/user.js";
 import storage from "../../utils/stores.js";
 
+import makeButtonGroup from "../../components/buttonGroup.js";
+
 const { useNavigate } = ReactRouterDom;
 
 export default function User() {
@@ -39,13 +41,7 @@ export default function User() {
     },
   ];
 
-  const btnGroup = options.map((opt, idx)=>vNode(Tooltip, {
-    content: opt.tooltip ?? opt.name,
-  }, vNode(Button, {
-    key: idx,
-    onClick: ()=>{opt?.fn?.()},
-    theme: opt?.theme ?? "default",
-  }, opt.name)));
+  const btnGroup = makeButtonGroup(options);
 
   const devBox = vNode('div', {
     className: "d-grid gap-2 col-6 col-md-4 mx-auto",

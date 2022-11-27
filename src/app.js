@@ -5,6 +5,8 @@ import Teach from "./views/teach/teach.js";
 import User from "./views/user/user.js";
 import King from "./views/king/king.js";
 import Dev from "./views/dev/dev.js";
+import Doc from "./views/doc/doc.js";
+import Ground from "./views/ground/ground.js";
 import Login from "./views/user/login.js";
 import Item, {loader as itemLoader, ItemDetail} from "./views/item/item.js";
 import ItemCreatePage from "./views/item/itemCreate.js";
@@ -61,6 +63,16 @@ const router = ReactRouterDom.createHashRouter([
         // 开发页
         path: "dev",
         element: vNode(Dev),
+      },
+      {
+        // 文档页
+        path: "doc",
+        element: vNode(Doc),
+      },
+      {
+        // 广场页
+        path: "ground",
+        element: vNode(Ground),
       },
     ]
   },

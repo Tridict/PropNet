@@ -28,7 +28,7 @@ function MyHeaderBox(props) {
     },
   }, xx.label)));
 
-  const logo = vNode('div', {className: 'logo'}, 'PropNet');
+  const logo = vNode('div', {className: 'logo'}, 'FeatureNet');
 
   const content = vNode(Row, {
     justify: "space-between",
@@ -55,7 +55,7 @@ function MyMenu(props) {
     {
       value: props.active,
       onChange: (idx) => props.setActive(idx),
-      logo: vNode('div', {className: 'logo'}, 'PropNet'),
+      logo: vNode('div', {className: 'logo'}, 'FeatureNet'),
     },
     props.options.map(
       (xx, idx)=>
@@ -71,17 +71,19 @@ export default function Home() {
   const [active, setActive] = useState('');
   const options = [
     {label: '首页', path: '../'},
+    {label: '广场', path: '../ground'},
     // {label: '大王', path: '../king'},
     {label: '答题', path: '../teach'},
     {label: '检索条目', path: '../items'},
     // {label: '检索断言', path: '../assertion'},
     {label: '用户', path: '../user'},
     {label: '开发', path: '../dev'},
+    {label: '文档', path: '../doc'},
   ];
   return vNode(Layout, {className: 'app'}, [
     vNode(Layout.Header, {className: 'app-header shadow-sm'}, vNode(MyHeaderBox, {active, setActive, options})),
     vNode(Layout.Content, {className: 'app-main'}, vNode('div', {
-      className: "container my-4 py-4 rounded app-main-container bg-white shadow-sm",
+      className: "container my-4 py-5 rounded app-main-container bg-white shadow-sm",
     }, vNode(ReactRouterDom.Outlet))),
     vNode(Layout.Footer, {className: 'app-footer'}, 'Copyright @ 2022 Tridict. All Rights Reserved'),
   ]);

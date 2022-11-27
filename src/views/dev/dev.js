@@ -1,6 +1,9 @@
 import { createElement as vNode, Fragment, useState } from "../../../vendor/react.js";
 import { Radio, Space, Select, Button, Tooltip } from "../../../vendor/tdesign.min.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
+
+import makeButtonGroup from "../../components/buttonGroup.js";
+
 const { generatePath, useNavigate } = ReactRouterDom;
 
 export default function Dev() {
@@ -15,6 +18,7 @@ export default function Dev() {
     {
       theme: "primary",
       name: "广场页",
+      fn: ()=>{goto('../ground');},
     },
     {
       theme: "primary",
@@ -46,7 +50,7 @@ export default function Dev() {
     },
     {
       theme: "primary",
-      name: "评估总览页?",
+      name: "映射总览页",
     },
     {
       theme: "primary",
@@ -54,7 +58,7 @@ export default function Dev() {
     },
     {
       theme: "primary",
-      name: "评估模板总览页",
+      name: "映射模板总览页",
     },
 
 
@@ -68,7 +72,7 @@ export default function Dev() {
     },
     {
       theme: "success",
-      name: "开始答题(仅评估判断)",
+      name: "开始答题(仅映射判断)",
     },
     {
       theme: "success",
@@ -168,52 +172,46 @@ export default function Dev() {
 
     {
       type: "title",
-      title: "评估相关",
+      title: "映射相关",
     },
     {
       theme: "primary",
-      name: "评估模板页",
-      fn: ()=>{goto('../evaluation-template/:perma', {perma: ""});},
+      name: "映射模板页",
+      fn: ()=>{goto('../mapping-template/:perma', {perma: ""});},
     },
     {
       theme: "danger",
-      name: "评估模板创建页",
-      fn: ()=>{goto('../evaluation-template-create');},
+      name: "映射模板创建页",
+      fn: ()=>{goto('../mapping-template-create');},
     },
     {
       theme: "warning",
-      name: "评估创建页(无参数)",
-      fn: ()=>{goto('../evaluation-create');},
+      name: "映射创建页(无参数)",
+      fn: ()=>{goto('../mapping-create');},
     },
     {
       theme: "success",
-      name: "评估创建页(基于模板)",
-      fn: ()=>{goto('../evaluation-create');},
+      name: "映射创建页(基于模板)",
+      fn: ()=>{goto('../mapping-create');},
     },
     {
       theme: "success",
-      name: "评估创建页(基于模板+1个陈述)",
-      fn: ()=>{goto('../evaluation-create');},
+      name: "映射创建页(基于模板+1个陈述)",
+      fn: ()=>{goto('../mapping-create');},
     },
     {
-      name: "获取10个新鲜评估",
+      name: "获取10个新鲜映射",
     },
     {
-      name: "获取10个随机评估",
+      name: "获取10个随机映射",
     },
     {
       theme: "success",
-      name: "开始基于1个评估模板评估一组陈述",
+      name: "开始基于1个映射模板刻画一组陈述",
     },
   ];
 
-  const btnGroup = options.map((opt, idx) => (opt.type==null||['btn', 'button'].includes(opt?.type?.toLowerCase?.())) ? vNode(Tooltip, {
-    content: opt.tooltip ?? opt.name,
-  }, vNode(Button, {
-    key: idx,
-    onClick: ()=>{opt?.fn?.()},
-    theme: opt?.theme ?? "default",
-  }, opt.name)) : ['title'].includes(opt?.type?.toLowerCase?.()) ? vNode('h5', {className: "text-center my-2"}, opt.title??"------") : null);
+  const btnGroup = makeButtonGroup(options);
 
   const devBox = vNode('div', {
     className: "d-grid gap-2 col-6 col-md-4 mx-auto",
@@ -221,3 +219,7 @@ export default function Dev() {
 
   return devBox;
 }
+
+// https://getbootstrap.com/docs/5.2/utilities/background/
+// https://tdesign.tencent.com/react/components/grid
+// https://tdesign.tencent.com/design/layout
