@@ -67,7 +67,7 @@ edge = {
 value_model = {
   ref_name: "",
   desc: "",
-  from_type: "int|float|bool",
+  from_type: "int|float|bool|enum",
 };
 dimension = {
   ref_name: "",
@@ -85,8 +85,22 @@ domain = {
 
 
 frame = {
-  slots: [],
-  edges: [],
+  // lang: "FN-Meta",
+  slots: [
+    {
+      // lang: "FN-Meta",
+      ref_name: "",
+      desc: "",
+    },
+  ],
+  relations: [
+    {
+      // lang: "FN-Meta",
+      edge_ref_name: "",
+      slot0_ref_name: "",
+      slot1_ref_name: "",
+    },
+  ],
 };
 
 item
