@@ -1,8 +1,7 @@
 import { createElement as vNode, useEffect, useState } from "../../../vendor/react.js";
 // import ReactRouterDom from "../../../vendor/react-router-dom.js";
-// import { opreation } from "../../utils/api/king.js";
 import storage from "../../utils/store.js";
-import { postItems } from "../../utils/api/item.js";
+import { postEdge } from "../../utils/api/edge.js";
 import {
   Form,
   Input,
@@ -41,7 +40,7 @@ export function EdgeCreatePage() {
       console.log(evt);
       console.log(data);
       MessagePlugin.info(JSON.stringify(data));
-      const wrapped = await postItems([data]);
+      const wrapped = await postEdge([data]);
       console.log(wrapped);
       MessagePlugin.info(JSON.stringify(wrapped));
     };
