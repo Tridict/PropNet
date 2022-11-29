@@ -1,7 +1,9 @@
 import { createElement as vNode, useState } from "../../../vendor/react.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
 import { Form, Input, Button, Tabs, MessagePlugin, Switch, Space } from "../../../vendor/tdesign.min.js";
-import { login, register } from "../../utils/api/user.js";
+import { UserApi } from "../../utils/api/api.js";
+const { login, register } = UserApi;
+// import { login, register } from "../../utils/api/user.js";
 import storage from "../../utils/store.js";
 
 const { FormItem } = Form;
@@ -26,13 +28,15 @@ export function Login() {
       } else {
         storage.removeItem('cache_account');
       }
-      const data = await login(form.getFieldsValue(['account','password']));
-      console.log(data);
-      if (data.access_token) {
+      const wrapped = await login(form.getFieldsValue(['account','password']));
+      console.log(wrapped);
+      if (wrapped?.data?.data?.access_token) {
         MessagePlugin.success('登录成功');
         navigate('../user');
-      } else if (data.msg) {
-        MessagePlugin.error(data.msg);
+      } else if (wrapped?.data?.msg) {
+        MessagePlugin.error(wrapped?.data?.msg);
+      } else if (wrapped?.statusText) {
+        MessagePlugin.error(wrapped?.statusText);
       }
     } else {
       MessagePlugin.info('请填入正确的内容');

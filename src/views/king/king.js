@@ -1,5 +1,7 @@
 import { createElement as vNode, useEffect } from "../../../vendor/react.js";
-import { opreation } from "../../utils/api/king.js";
+// import { opreation } from "../../utils/api/king.js";
+import { KingApi } from "../../utils/api/api.js";
+const { opreation } = KingApi;
 import storage from "../../utils/store.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
 import {
@@ -64,7 +66,9 @@ export default function King() {
       kwargs: JSON.parse(kwargsJsonText),
     };
     storage.setItem('old_king_form', data);
-    const wrapped = await opreation(data);
+    const wrapped = await opreation(data, (({wrapped})=>{
+      MessagePlugin.info(JSON.stringify(wrapped));
+    }));
     console.log(wrapped);
   };
   const onReset = async (evt) => {

@@ -9,6 +9,16 @@ class Request {
   }
 
   async wrapResponse(resp) {
+    if (!resp?.ok && resp?.fetchError!=null) {
+      console.log(resp.fetchError);
+      return {
+        "content-type": "",
+        ok: resp?.ok,
+        status: -1,
+        statusText: "fetchError",
+        fetchError: resp.fetchError,
+      };
+    };
     // console.log(resp);
     const content_type = resp?.headers?.get("content-type") ?? "";
     const wrapped = {
@@ -72,7 +82,15 @@ class Request {
           });
         };
       };
-      const res = await fetch(baseUrl + path, params);
+      let res = {};
+      try {
+        res = await fetch(baseUrl + path, params);
+      } catch(error) {
+        res = {
+          ok: false,
+          fetchError: error,
+        };
+      };
       const wrapped = await this.wrapResponse(res);
       if (retryCount>0) {
         const refreshed = await this.ensureAccessByRefresh(wrapped);

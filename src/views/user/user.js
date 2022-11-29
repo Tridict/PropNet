@@ -1,8 +1,10 @@
 import { createElement as vNode, useEffect } from "../../../vendor/react.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
-import { Button, Tooltip } from "../../../vendor/tdesign.min.js";
-import { logout } from "../../utils/api/user.js";
+import { Button, MessagePlugin } from "../../../vendor/tdesign.min.js";
+import { UserApi } from "../../utils/api/api.js";
 import storage from "../../utils/store.js";
+
+const logout = UserApi.logout;
 
 import makeButtonGroup from "../../components/buttonGroup.js";
 
@@ -10,7 +12,7 @@ const { useNavigate } = ReactRouterDom;
 
 export default function User() {
   const navigate = useNavigate();
-  const username = storage.getItem('current_user')
+  const username = storage.getItem('current_user')?.username;
 
   useEffect(() => {
     if (!username) {
@@ -48,7 +50,13 @@ export default function User() {
   }, btnGroup);
 
   function handleLogout() {
-    logout();
+    logout((({wrapped})=>{
+      if (wrapped?.ok) {
+        MessagePlugin.success("登出成功");
+      } else {
+        MessagePlugin.warning("登出发生异常" + JSON.stringify(wrapped));
+      };
+    }));
     navigate('../login');
   } 
   return vNode('div', null, [
