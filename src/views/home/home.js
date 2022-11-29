@@ -82,9 +82,13 @@ export default function Home() {
   ];
   return vNode(Layout, {className: 'app'}, [
     vNode(Layout.Header, {className: 'app-header shadow-sm'}, vNode(MyHeaderBox, {active, setActive, options})),
-    vNode(Layout.Content, {className: 'app-main'}, vNode('div', {
-      className: "container my-4 py-5 rounded app-main-container bg-white shadow-sm",
-    }, vNode(ReactRouterDom.Outlet))),
+    vNode(Layout.Content, {className: 'app-main'},
+      vNode('div', {
+        className: "app-main-container-wrap"
+      }, vNode('div', {
+        className: "container my-4 py-5 rounded app-main-container bg-white shadow-sm",
+      }, vNode(ReactRouterDom.Outlet))),
+    ),
     vNode(Layout.Footer, {className: 'app-footer'}, 'Copyright @ 2022 Tridict. All Rights Reserved'),
   ]);
 }

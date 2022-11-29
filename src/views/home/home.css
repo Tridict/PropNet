@@ -20,3 +20,8 @@ header.app-header .logo {
 main.app-main {
   min-height: 100vh;
 }
+
+.app-main-container-wrap {
+  margin: 0 auto;
+  max-width: 1220px;
+}
