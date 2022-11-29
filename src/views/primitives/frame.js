@@ -45,7 +45,7 @@ function FrameSlot({remove, refnameValidator, key, idx, name, ...restField}) {
       label: "desc",
       name: [name, "desc"],
     }, vNode(Input)),
-    vNode(FormItem, null, vNode(Button, {theme: "danger", variant:"dashed",  onClick: ()=>remove(name)}, '删')),
+    vNode(FormItem, null, vNode(Button, {theme: "danger", variant:"dashed", shape: "round", onClick: ()=>remove(name)}, '删')),
   ])
 }
 
@@ -77,7 +77,7 @@ function FrameRelation({remove, relationSlotValidator, edgeOptions, key, idx, na
       rules: [{ required: true, type: 'error' },{validator: relationSlotValidator, message: 'ref_name不存在，请先添加slot'}],
     }, vNode(Input)),
     vNode(FormItem, null, [
-      vNode(Button, {theme: "danger", variant: "dashed", onClick: ()=>remove(name)}, '删')]),
+      vNode(Button, {theme: "danger", variant: "dashed", shape: "round", onClick: ()=>remove(name)}, '删')]),
   ])
 }
 

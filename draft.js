@@ -144,6 +144,161 @@ mappingCase = {
   output: "",
 };
 
+frameCase = {
+  frame: "",
+  args: {
+    [slot.ref_name]: item.ref_name,
+  },
+};
+
+
+
+hh = {
+  'Edge': {},
+  'Type': {
+    'Template': {},
+    'Frame': {
+      'Link': {},
+      'Mapping': {},
+    },
+  },
+  'Prototype|Prefab': {},
+  'Case': {
+    'Item': {},
+    'FrameCase': {
+      'LinkCase': {},
+      'MappingCase': {},
+    },
+  },
+};
+
+// 我想去意大利，但老婆想去土耳其，谁也不服谁，就让孩子来选。
+// 激活“家庭旅行”脚本的“选择目的地”步骤。
+// 有可能 我想去意大利 并不是指 我想我去意大利 而是 我想我和老婆孩子去意大利
+// 可以说这是“说错了”，或者“没想清楚”，或者“没逻辑”，但这种可能性确实存在
+// 肖像画家问客户：“你想画哪种风格？”
+// 显然不是“你想[你(自己)]画哪种风格？”而是“你想[我(给你)]画哪种风格？”
+// 我在理发/剪头/剃头呢。
+
+
+primitives = {
+  Frames: {
+    ValueProfile: {},
+    LabelProfile: {},
+  },
+  Semis: {},
+
+  Prototypes: {
+    Continuum: {},
+    ValueDomain: {},
+    ValueDomainProfile_or_ValueModel: {},
+  },
+
+  Sington_of_one_system: {
+    Edge: {},
+    Value: {},
+    Label: {},
+  },
+  Instances_or_Cases: {
+    App: {},
+  },
+};
+// 是否可以发展变化
+
+
+
+
+
+
+hh = {
+  'Label': {},
+  'Value': {},
+  'Process': {},
+  'Ref': {},
+  'Array': {},
+  'Dict': {},
+
+  'Frame|Schema': {
+    'LabelProfile': {
+      string: "",
+      domain: {},
+    },
+    'ValueProfile': {
+      model: [
+        'label',
+        'number',
+        'boolean',
+        'chance',
+        'ref',
+        'slot',
+        'item',
+      ],
+    },
+    'ProcessProfile': {agent, method, patient},
+    'RefProfile': {},
+    'ArrayProfile': {},
+    'DictProfile': {},
+  },
+
+  'Frame': {
+    'Mapping': ['input', 'method', 'output'],
+    'Label': [],
+    'Type': [],
+    'Element': ['frame', 'slot', 'filler'],
+    'Indie': ['domain', 'value'],
+    'Compound': ['traits'],
+    'Link|Relation': ['slot0', 'edge', 'slot1'],
+  },
+  'SemiItem': {},
+  'Prototype|Prefab': {},
+  'Prototype|Prefab': {},
+  'Instance|Case': {},
+};
+
+prefab = {
+  statements: [],
+}
+
+instance = {
+  experiences: [],
+}
+
+// 互动
+// 经历者 经历 事件/过程
+
+// 时间点
+// 时间段
+
+// 点事件
+// 体事件
+
+TimePoint
+
+
+
+// 体育运动
+// action
+// actionSequence
+
+// 空间方位
+// 飞机上 是指 飞机里面 还是 飞机表面
+// 飞机有外壳
+// 飞机里面/内部和飞机外面/外部
+// humanCanGetIntoOrGetOutOf
+
+
+
+FrameMapping
+
+
+item = {
+  ref_name: "",
+  schema: "",
+  detail: {},
+};
+
+
+
 
 
 
