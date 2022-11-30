@@ -1,4 +1,5 @@
 import storage from "../store.js";
+import { stringifyQs } from "../querystring.js";
 
 const baseUrl = 'http://192.168.0.101:8000';
 
@@ -115,11 +116,25 @@ class Request {
     }
   }
 
-  async get(path, config={}, callback) {
+  async get(path, queryObject=null, config={}, callback) {
+    if (queryObject!=null) {
+      const queryString = stringifyQs(queryObject);
+      const splited = path.split("?");
+      const last = splited[splited.length-1];
+      if (splited?.length>=2 && last.length) {
+        if (last.endsWith("&")) {
+          path = `${path}${queryString}`;
+        } else {
+          path = `${path}&${queryString}`;
+        };
+      } else {
+        path = `${path}?${queryString}`;
+      };
+    };
     const params = {
       method: 'GET',
       ...this.config,
-      ...config,
+      ...(config??{}),
     };
     return await this.request(path, params, callback);
   }
@@ -128,13 +143,13 @@ class Request {
     const headers = {
       'Content-Type': 'application/json',
       ...(this.config?.headers||{}),
-      ...(config.headers||{}),
+      ...(config?.headers||{}),
     }
     const params = {
       method: 'POST',
       body: JSON.stringify(data),
       ...this.config,
-      ...config,
+      ...(config??{}),
       headers,
     }
 
@@ -144,7 +159,7 @@ class Request {
   async put(path, data, config={}, callback) {
     const params = {
       method: 'PUT',
-      ...config,
+      ...(config??{}),
       ...this.config,
       headers: {
         'Content-Type': 'application/json',
@@ -157,7 +172,7 @@ class Request {
   async patch(path, data, config={}, callback) {
     const params = {
       method: 'PATCH',
-      ...config,
+      ...(config??{}),
       ...this.config,
       headers: {
         'Content-Type': 'application/json',

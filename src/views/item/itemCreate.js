@@ -1,6 +1,8 @@
 import { createElement as vNode, useEffect, useState } from "../../../vendor/react.js";
 import storage from "../../utils/store.js";
-import { postItems } from "../../utils/api/item.js";
+// import { postItems } from "../../utils/api/item.js";
+import { EntryApi } from "../../utils/api/api.js";
+const { createEntries } = EntryApi;
 import {
   Form,
   Input,
@@ -96,7 +98,7 @@ export default function ItemCreatePage() {
       console.log(evt);
       console.log(data);
       MessagePlugin.info(JSON.stringify(data));
-      const wrapped = await postItems([data]);
+      const wrapped = await createEntries([data]);
       console.log(wrapped);
       MessagePlugin.info(JSON.stringify(wrapped));
     };

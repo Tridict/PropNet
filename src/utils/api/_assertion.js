@@ -1,10 +1,10 @@
-import { stringifyQs } from "../querystring.js";
-import { request } from "./request.js";
+// import { stringifyQs } from "../querystring.js";
+// import { request } from "./request.js";
 
-export async function searchAssertions(params) {
-  const res = await request.get(`/api/assertions/?${stringifyQs(params)}`);
-  return res;
-}
+// export async function searchAssertions(params) {
+//   const res = await request.get(`/api/assertions/?${stringifyQs(params)}`);
+//   return res;
+// }
 
 // export async function getRandomAssertion() {
 //   const res = await request.get('/api/assertions');

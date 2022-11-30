@@ -23,7 +23,7 @@ export function stringifyQs (params) {
   // 参考 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
   // 参考 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
   for (const [key, value] of Object.entries(params)) {
-    res.push(`${encodeURIComponent(key)}=${encodeURIComponent(value)}`);
+    res.push(`${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(value))}`);
   }
   return res.join('&');
 }

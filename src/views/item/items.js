@@ -1,7 +1,9 @@
 import { createElement as vNode, Fragment, useState } from "../../../vendor/react.js";
 import ReactRouterDom from "../../../vendor/react-router-dom.js";
 import { Input, Button } from "../../../vendor/tdesign.min.js";
-import { getItemByFace } from "../../utils/api/item.js";
+// import { getItemByFace } from "../../utils/api/item.js";
+import { EntryApi } from "../../utils/api/api.js";
+const { lookupEntry } = EntryApi;
 
 export default function Items() {
   // 暂时
@@ -21,7 +23,8 @@ export function SearchItem() {
 }
 
 export async function loader({ params }) {
-  return getItemByFace(params.face);
+  // return getItemByFace(params.face);
+  return lookupEntry({face: params.face});
 }
 
 export function ItemDetail() {
