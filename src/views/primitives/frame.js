@@ -1,8 +1,11 @@
 import { createElement as vNode, useEffect, useState } from "../../../vendor/react.js";
 // import ReactRouterDom from "../../../vendor/react-router-dom.js";
-import { getEdges } from "../../utils/api/edge.js";
-import { postFrame } from "../../utils/api/frame.js";
-import storage from "../../utils/store.js";
+// import { getEdges } from "../../utils/api/edge.js";
+// import { postFrame } from "../../utils/api/frame.js";
+import { EntryApi, AppApi } from "../../utils/api/api.js";
+const { getProfile } = AppApi;
+const { createEntries } = EntryApi;
+// import storage from "../../utils/store.js";
 import {
   Form,
   Input,
@@ -100,8 +103,21 @@ export function FrameCreatePage() {
 
   useEffect(async()=>{
     // 初始化 edgeOptions 的数据
-    const edges = await getEdges();
-    changeEdgeOptions(edges);
+
+    // const edges = await getEdges();
+    const edges = await getProfile(["edges"]);
+    // changeEdgeOptions(edges);
+
+    console.log(edges);
+
+    // TODO  改用真数据
+
+    const mock_edges = [
+      { label: '丈夫-夫妇-妻子', value: '夫妇'},
+      { label: '父亲-feiowjfieowjfo-孩子', value: 'feiowjfieowjfo'},
+      { label: '母亲-32jriojdewio-孩子', value: '32jriojdewio'},
+    ];
+    changeEdgeOptions(mock_edges);
 
     // form.setFieldsValue({
     //   lang: lang_of_last_created_item,
@@ -111,11 +127,18 @@ export function FrameCreatePage() {
   const onSubmit = async (evt) => {
     if (evt.validateResult === true) {
       const data = form.getFieldsValue(true);
+
+
+      data._schema = "FrameProfile";
+      // TODO  这个应该是设置项
+
+
       // storage.setItem('lang_of_last_created_item', form.getFieldValue("lang"));
       console.log(evt);
       console.log(data);
       MessagePlugin.info(JSON.stringify(data));
-      const wrapped = await postFrame([data]);
+      // const wrapped = await postFrame([data]);
+      const wrapped = await createEntries([data]);
       console.log(wrapped);
       MessagePlugin.info(JSON.stringify(wrapped));
     };

@@ -1,7 +1,9 @@
 import { createElement as vNode, useEffect, useState } from "../../../vendor/react.js";
 // import ReactRouterDom from "../../../vendor/react-router-dom.js";
-import storage from "../../utils/store.js";
-import { postEdge } from "../../utils/api/edge.js";
+// import storage from "../../utils/store.js";
+// import { postEdge } from "../../utils/api/edge.js";
+import { EntryApi } from "../../utils/api/api.js";
+const { createEntries } = EntryApi;
 import {
   Form,
   Input,
@@ -36,11 +38,18 @@ export function EdgeCreatePage() {
   const onSubmit = async (evt) => {
     if (evt.validateResult === true) {
       const data = form.getFieldsValue(true);
+
+
+      data._schema = "EdgeProfile";
+      // TODO  这个应该是设置项
+
+
       // storage.setItem('lang_of_last_created_item', form.getFieldValue("lang"));
       console.log(evt);
       console.log(data);
       MessagePlugin.info(JSON.stringify(data));
-      const wrapped = await postEdge([data]);
+      // const wrapped = await postEdge([data]);
+      const wrapped = await createEntries([data]);
       console.log(wrapped);
       MessagePlugin.info(JSON.stringify(wrapped));
     };

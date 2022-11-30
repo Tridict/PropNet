@@ -10,11 +10,14 @@ export class KingApi {
 
 export class AppApi {
   static async getVersion(callback) {
-    const wrapped = await request.get(`/api/version`, null, null, callback);
+    const wrapped = await request.get(`/api/app/version`, null, null, callback);
     return wrapped;
   }
   static async getProfile(keys, callback) {
-    const wrapped = await request.get(`/api/profile`, (keys!=null?{keys: keys}:null), null, callback);
+    if (keys!=null && !Array.isArray(keys)) {
+      keys = [keys];
+    };
+    const wrapped = await request.get(`/api/app/profile`, (keys!=null?{keys: keys}:null), null, callback);
     return wrapped;
   }
 }
