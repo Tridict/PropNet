@@ -8,12 +8,60 @@ export class KingApi {
   }
 }
 
+export class PrimitiveApi {
+  static async lookupSchema(ref_name, forceRefresh=false, callback) {
+    if (!forceRefresh) {
+      const storedProfile = storage.getItem("appProfile");
+      const found = storedProfile?.schemas?.find?.(it=>it.ref_name==ref_name);
+      if (found!=null) {
+        return {
+          ok: true,
+          data: {data: found},
+          status: -2,
+          statusText: "stored value found",
+        };
+      };
+    };
+    const queryObject = {
+      _type: "Schema",
+      ref_name: ref_name,
+      limit: 1,
+    };
+    return EntryApi.lookupEntries(queryObject, callback);
+  }
+}
+
 export class AppApi {
   static async getVersion(callback) {
     const wrapped = await request.get(`/api/app/version`, null, null, callback);
     return wrapped;
   }
-  static async getProfile(keys, callback) {
+  static async getProfile(keys, forceRefresh=false, callback) {
+    if (!forceRefresh) {
+      const storedProfile = storage.getItem("appProfile") ?? {};
+      if (!keys?.length) {
+        return {
+          ok: true,
+          data: {data: storedProfile},
+          status: -2,
+          statusText: "stored value found",
+        };
+      };
+      const storedDict = {};
+      for (const key of keys) {
+        const found = storedProfile?.[key];
+        if (found==null) {break;};
+        storedDict[key] = found;
+      };
+      if (Object.keys(storedDict).length>=keys.length) {
+        return {
+          ok: true,
+          data: {data: storedDict},
+          status: -2,
+          statusText: "stored value found",
+        };
+      };
+    };
     if (keys!=null && !Array.isArray(keys)) {
       keys = [keys];
     };
@@ -53,7 +101,7 @@ export class EntryApi {
       params: {data: data},
       wrapped: {
         ok: resp?.ok,
-        status: -1,
+        status: -2,
         statusText: "Don't delete anything",
       },
     });

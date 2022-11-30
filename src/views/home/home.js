@@ -81,7 +81,11 @@ export default function Home() {
     {label: '文档', path: '../doc'},
   ];
   return vNode(Layout, {className: 'app'}, [
-    vNode(Layout.Header, {className: 'app-header shadow-sm'}, vNode(MyHeaderBox, {active, setActive, options})),
+    vNode(Layout.Header, {className: 'app-header shadow-sm'},
+      vNode(MyHeaderBox, {
+        active, setActive, options,
+      })
+    ),
     vNode(Layout.Content, {className: 'app-main'},
       vNode('div', {
         className: "app-main-container-wrap"

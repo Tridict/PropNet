@@ -93,35 +93,29 @@ export function FrameCreatePage() {
 
   // const [edge, setEdge] = useState('');
   const [edgeOptions, changeEdgeOptions] = useState([
-    { label: '丈夫-夫妇-妻子', value: '夫妇'},
-    { label: '父亲-feiowjfieowjfo-孩子', value: 'feiowjfieowjfo'},
-    { label: '母亲-32jriojdewio-孩子', value: '32jriojdewio'},
+    // { label: '丈夫-夫妇-妻子', value: '夫妇'},
+    // { label: '父亲-feiowjfieowjfo-孩子', value: 'feiowjfieowjfo'},
+    // { label: '母亲-32jriojdewio-孩子', value: '32jriojdewio'},
    ]);
   // const onChangeEdge = (value) => {
   //   setEdge(value);
   // };
 
-  useEffect(async()=>{
+  useEffect(()=>{
     // 初始化 edgeOptions 的数据
 
-    // const edges = await getEdges();
-    const edges = await getProfile(["edges"]);
-    // changeEdgeOptions(edges);
-
-    console.log(edges);
-
-    // TODO  改用真数据
-
-    const mock_edges = [
-      { label: '丈夫-夫妇-妻子', value: '夫妇'},
-      { label: '父亲-feiowjfieowjfo-孩子', value: 'feiowjfieowjfo'},
-      { label: '母亲-32jriojdewio-孩子', value: '32jriojdewio'},
-    ];
-    changeEdgeOptions(mock_edges);
-
-    // form.setFieldsValue({
-    //   lang: lang_of_last_created_item,
-    // });
+    getProfile(["edges"], false, (({wrapped})=>{
+      console.log(wrapped);
+      MessagePlugin.info(JSON.stringify(wrapped));
+    })).then(edgesWrap=>{
+      const edges = edgesWrap?.data?.data?.edges ?? [
+        { label: '丈夫-夫妇-妻子', value: '夫妇'},
+        { label: '父亲-feiowjfieowjfo-孩子', value: 'feiowjfieowjfo'},
+        { label: '母亲-32jriojdewio-孩子', value: '32jriojdewio'},
+      ];
+      // TODO  消除假数据数据
+      changeEdgeOptions(edges);
+    });
   }, []);
 
   const onSubmit = async (evt) => {
