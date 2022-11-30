@@ -25,3 +25,7 @@ main.app-main {
   margin: 0 auto;
   max-width: 1220px;
 }
+
+.app-main-content-wrap {
+  max-width: 960px;
+}

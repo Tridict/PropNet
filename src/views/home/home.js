@@ -87,7 +87,9 @@ export default function Home() {
         className: "app-main-container-wrap"
       }, vNode('div', {
         className: "container my-4 py-5 rounded app-main-container bg-white shadow-sm",
-      }, vNode(ReactRouterDom.Outlet))),
+      }, vNode('div', {
+        className: "container app-main-content-wrap",
+      }, vNode(ReactRouterDom.Outlet)))),
     ),
     vNode(Layout.Footer, {className: 'app-footer'}, 'Copyright @ 2022 Tridict. All Rights Reserved'),
   ]);
