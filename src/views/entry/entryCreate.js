@@ -20,7 +20,7 @@ const BsDiv = (klass) => {
     } else {
       sub_props.className = `${klass}`;
     };
-    return vNode('div', sub_props, ...(props?.children??[]));
+    return vNode('div', sub_props, props?.children);
   };
 };
 // const BsDiv = (klass) => {
@@ -142,13 +142,101 @@ const 组件_可复用的表单 = class extends Component {
   }
 };
 
-const 整个表单 = class extends Component {
+const BsLine = (props) => {
+  console.log(props);
+  return vNode(BsRow, {
+    className: "my-4",
+  }, ...[
+    vNode(BsCol, {
+      className: "col-12 col-sm-12 col-md-3 col-lg-2",
+    }, (props?.label)),
+    vNode(BsCol, {
+      className: "col-12 col-sm-12 col-md-9 col-lg-10",
+    }, props?.children),
+  ]);
+};
+
+
+const Controller_Line_Wrapper = (props) => {};
+
+const Controller_of_Dict = (props) => {
+  const [lines, set_lines] = useState([
+    {label: "标签"},
+    {label: "标签"},
+  ]);
+  return vNode(BsContainer, null,
+    lines.map((line, idx)=>vNode(BsLine, {
+      idx: idx,
+      label: line.label,
+      // onDelete: ()=>{},
+      // onChange: ()=>{},
+    })),
+  );
+};
+
+
+
+const 整个表单 = (props) => {
+
+  const [lines, set_lines] = useState([{}, {}]);
+  const [schema_name, set_schema_name] = useState(props?.schema_name??"<未命名的Schema>");
+  const [instance_name, set_instance_name] = useState(props?.instance_name??"对象");
+
+  const 顶部标题区 = () => vNode(BsContainer, {}, vNode("h3", {
+  }, `新建 ${instance_name}`));
+
+  const 构架名称区 = () => vNode(BsContainer, {}, vNode(BsLine, {
+    label: "当前 Schema",
+  }, schema_name));
+
+  const 添加预设字段区 = () => vNode(BsContainer, {}, vNode(BsLine, {
+    label: "更多字段(预设)",
+    // children: "hello",
+  }, []));
+  const 添加自定义字段区 = () => vNode(BsContainer, {}, vNode(BsLine, {
+    label: "更多字段(定义)",
+  }, []));
+
+  const 底部按钮区 = () => vNode(BsContainer, {}, vNode(BsLine, {
+    label: "底部按钮区",
+  }, vNode('div', {
+    className: "hstack gap-2",
+  }, [
+    vNode(Button, {
+      theme: "default",
+      type: "button",
+    }, "提交"),
+    vNode(Button, {
+      theme: "default",
+      type: "button",
+    }, "重置"),
+    vNode(Button, {
+      theme: "default",
+      type: "button",
+    }, "更换 Schema"),
+  ])));
+
+  return vNode('div', null, [
+    vNode('div', {className: "my-4"}, 顶部标题区()),
+    vNode('div', {className: "my-4"}, vNode(Controller_of_Dict, {
+      lines: lines,
+      set_lines: set_lines,
+    })),
+    vNode('div', {className: "my-4"}, 添加预设字段区()),
+    vNode('div', {className: "my-4"}, 添加自定义字段区()),
+    vNode('div', {className: "my-4"}, 构架名称区()),
+    vNode('div', {className: "my-4"}, 底部按钮区()),
+  ]);
+};
+
+
+const 整个表单__ = class extends Component {
   constructor(props={}) {
     super(props);
     this.state = {
       schemas: [],
       fields: [],
-      lines: [],
+      lines: [{}, {}],
     };
   }
   async componentDidMount() {
@@ -160,10 +248,14 @@ const 整个表单 = class extends Component {
     const schemas = engine?.profile?.schemas ?? [];
     this.setState({schemas: schemas});
   }
+
   render() {
-    // return BsContainer(null, this.state.lines.map(line=>BsRow(null, vNode('div'))));
-    return vNode(BsContainer, null, this.state.lines.map(line=>BsRow(null, vNode('div'))));
-    return vNode('div');
+    return vNode('div', null, ...[
+      vNode('div'),
+      vNode('div'),
+      vNode('div'),
+    ]);
+    return vNode(Controller_of_Dict);
   }
 };
 

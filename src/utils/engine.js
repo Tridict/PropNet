@@ -33,10 +33,16 @@ const DefaultProfile = {
       // _refer_to: "schemas/SchemaSchema",
       _schema: "SchemaSchema",
       name: "SchemaSchema",
+      instance_name: "Schema",
       data_form: "dict",
       fields: [
         {
           field_name: "name",
+          data_form: "string",
+          control_method: "input",
+        },
+        {
+          field_name: "instance_name",
           data_form: "string",
           control_method: "input",
         },
@@ -66,6 +72,7 @@ const DefaultProfile = {
       // _refer_to: "schemas/SchemaFieldSchema",
       _schema: "SchemaSchema",
       name: "SchemaFieldSchema",
+      instance_name: "SchemaField",
       data_form: "dict",
       fields: [
         // 公共
