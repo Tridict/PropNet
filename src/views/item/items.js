@@ -28,8 +28,9 @@ export async function loader({ params }) {
 }
 
 export function ItemDetail() {
-  const data = ReactRouterDom.useLoaderData();
-  console.log(data);
+  // TODO：useLoaderData有bug
+  // const data = ReactRouterDom.useLoaderData();
+  // console.log(data);
   return vNode(Fragment, null, [
     vNode('p', null, '该条目不存在, 是否创建？'),
     vNode(ReactRouterDom.Link, {to: '../item-create'}, vNode(Button, null, '创建条目')),
