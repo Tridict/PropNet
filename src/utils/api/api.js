@@ -140,15 +140,16 @@ export class UserApi {
     storage.removeItem("refresh_token");
     storage.removeItem("current_user");
 
-    const wrapped = await request.post(`/api/user/actions/logout`, {
-      access_token: access_token,
-      refresh_token: refresh_token,
-    }, null, callback);
-
-    if (wrapped?.data?.ok) {
-      storage.removeItem("current_user");
-    };
-
-    return wrapped;
+    if (access_token && refresh_token) {
+      const wrapped = await request.post(`/api/user/actions/logout`, {
+        access_token: access_token,
+        refresh_token: refresh_token,
+      }, null, callback);
+  
+      if (wrapped?.data?.ok) {
+        storage.removeItem("current_user");
+      };
+      return wrapped;
+    }
   }
 }

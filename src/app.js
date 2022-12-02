@@ -1,5 +1,6 @@
 import { createElement as vNode, useEffect } from "../vendor/react.js";
 import ReactRouterDom from "../vendor/react-router-dom.js";
+import { routerGuard } from "./router/routerGuard.js";
 import Home from "./views/home/home.js";
 import Teach from "./views/teach/teach.js";
 import User from "./views/user/user.js";
@@ -21,8 +22,7 @@ import { UserApi } from "./utils/api/api.js";
 import storage from "./utils/store.js";
 
 
-// https://juejin.cn/post/7023712736869613581
-const router = ReactRouterDom.createHashRouter([
+const routes = [
   {
     path: "/",
     element: vNode(Home),
@@ -43,6 +43,7 @@ const router = ReactRouterDom.createHashRouter([
         // 条目创建页
         path: "entry-create",
         element: vNode(EntryCreatePage),
+        loginRequired: true,
       },
       {
         // 条目创建页
@@ -53,11 +54,13 @@ const router = ReactRouterDom.createHashRouter([
         // edge创建页
         path: "edge-create",
         element: vNode(EdgeCreatePage),
+        loginRequired: true,
       },
       {
         // frame创建页
         path: "frame-create",
         element: vNode(FrameCreatePage),
+        loginRequired: true,
       },
       // 条目创建页 additem/
       {
@@ -69,6 +72,7 @@ const router = ReactRouterDom.createHashRouter([
         // User
         path: "user",
         element: vNode(User),
+        loginRequired: true,
       },
       {
         path: "login",
@@ -77,6 +81,7 @@ const router = ReactRouterDom.createHashRouter([
       {
         path: "king",
         element: vNode(King),
+        loginRequired: true,
       },
       // {
       //   // 断言检索页
@@ -100,10 +105,7 @@ const router = ReactRouterDom.createHashRouter([
       },
     ]
   },
-]);
-// const navigate = ReactRouterDom.useNavigate();
-
-// console.log('router\n', router);
+];
 
 export function MyApp() {
 
@@ -117,15 +119,8 @@ export function MyApp() {
   //   // engine.init();
   // }, []);
 
-  useEffect(()=>{
-    if (storage.getItem("refresh_token_expired")) {
-      MessagePlugin.warning("登录过期，请重新登录");
-      UserApi.logout();
-    };
-  }, []);
-
   return vNode(ThemeContext.Provider,
     { value: themes.dark },
-    vNode(ReactRouterDom.RouterProvider, {router})
+    vNode(ReactRouterDom.HashRouter, null, vNode(routerGuard, {routes}))
   );
 }

@@ -1,5 +1,4 @@
-import { createElement as vNode, useEffect } from "../../../vendor/react.js";
-import ReactRouterDom from "../../../vendor/react-router-dom.js";
+import { createElement as vNode } from "../../../vendor/react.js";
 import { Button, MessagePlugin } from "../../../vendor/tdesign.min.js";
 import { UserApi } from "../../utils/api/api.js";
 import storage from "../../utils/store.js";
@@ -8,19 +7,9 @@ const logout = UserApi.logout;
 
 import makeButtonGroup from "../../components/buttonGroup.js";
 
-const { useNavigate } = ReactRouterDom;
 
 export default function User() {
-  const navigate = useNavigate();
-  const access_token = storage.getItem('access_token');
-  const refresh_token = storage.getItem('refresh_token');
   const username = storage.getItem('current_user')?.username;
-
-  useEffect(() => {
-    if (!username || !access_token || !refresh_token) {
-      navigate('../login');
-    }
-  });
 
   const options = [
     {
