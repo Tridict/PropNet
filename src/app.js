@@ -1,4 +1,4 @@
-import {createElement as vNode} from "../vendor/react.js";
+import { createElement as vNode, useEffect } from "../vendor/react.js";
 import ReactRouterDom from "../vendor/react-router-dom.js";
 import Home from "./views/home/home.js";
 import Teach from "./views/teach/teach.js";
@@ -12,8 +12,11 @@ import { FrameCreatePage } from "./views/primitives/frame.js";
 import Login from "./views/user/login.js";
 import Items, {loader as itemLoader, ItemDetail} from "./views/item/items.js";
 import ItemCreatePage from "./views/item/itemCreate.js";
+import EntryCreatePage from "./views/entry/entryCreate.js";
 import ErrorPage from "./views/error-page/error-page.js";
 import { ThemeContext, themes } from "./utils/theme.js";
+import { MessagePlugin } from "../vendor/tdesign.min.js";
+import engine from "./utils/engine.js";
 
 const router = ReactRouterDom.createHashRouter([
   {
@@ -31,6 +34,11 @@ const router = ReactRouterDom.createHashRouter([
         path: "items/:face",
         element: vNode(ItemDetail),
         loader: itemLoader,
+      },
+      {
+        // 条目创建页
+        path: "entry-create",
+        element: vNode(EntryCreatePage),
       },
       {
         // 条目创建页
@@ -93,7 +101,19 @@ const router = ReactRouterDom.createHashRouter([
 // console.log('router\n', router);
 
 export function MyApp() {
-  return vNode(ThemeContext.Provider, 
-    {value: themes.dark}, 
-    vNode(ReactRouterDom.RouterProvider, {router}));
+
+  // const logger = function logger ({content, style, duration, details}) {
+  //   const style_ = (MessagePlugin[style]!=null) ? style : "info";
+  //   MessagePlugin[style_]?.(content??JSON.stringify(details));
+  // };
+
+  // useEffect(()=>{
+  //   engine.setLogger(logger);
+  //   engine.init();
+  // }, []);
+
+  return vNode(ThemeContext.Provider,
+    { value: themes.dark },
+    vNode(ReactRouterDom.RouterProvider, {router})
+  );
 }

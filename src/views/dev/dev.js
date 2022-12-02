@@ -12,6 +12,11 @@ export default function Dev() {
 
   const options = [
     {
+      theme: "warning",
+      name: "新版条目创建页",
+      fn: ()=>{goto('../entry-create');},
+    },
+    {
       type: "title",
       title: "页面跳转",
     },

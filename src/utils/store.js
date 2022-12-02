@@ -5,9 +5,9 @@ function _serialize(obj) {
   return JSON.stringify(obj)
 }
 
-function _deserialize(str, defaultVal = '') {
+function _deserialize(str, defaultVal = null) {
   if (!str) return defaultVal
-  let val = ''
+  let val = null
   try {
     val = JSON.parse(str)
   } catch (e) {
