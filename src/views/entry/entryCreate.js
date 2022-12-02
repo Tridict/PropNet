@@ -4,32 +4,42 @@ import { EntryApi } from "../../utils/api/api.js";
 const { createEntries } = EntryApi;
 import engine from "../../utils/engine.js";
 import {
-  Form,
-  Input,
-  InputNumber,
-  RangeInput,
-  Textarea,
-  Radio,
-  Checkbox,
-  Button,
-  Switch,
-  Select,
-  Space,
-  Cascader,
-  TagInput,
-  MessagePlugin,
-  Tooltip,
-  Popup,
-  Divider,
-  Tabs,
-  SelectInput,
-  Slider,
-  TimePicker,
-  DatePicker,
-  DateRangePicker,
-  TimeRangePicker,
+  Form, Input, InputNumber, RangeInput, Textarea, Radio, Checkbox, Button, Switch, Select, Space, Cascader, TagInput, MessagePlugin, Tooltip, Popup, Divider, Tabs, SelectInput, Slider, TimePicker, DatePicker, DateRangePicker, TimeRangePicker,
 } from "../../../vendor/tdesign.min.js";
 const { FormItem, FormList } = Form;
+
+
+
+const BsDiv = (klass) => {
+  return (props) => {
+    const sub_props = {};
+    Object.assign(sub_props, props);
+    sub_props.children = undefined;
+    if (sub_props?.className?.length) {
+      sub_props.className += ` ${klass}`;
+    } else {
+      sub_props.className = `${klass}`;
+    };
+    return vNode('div', sub_props, ...(props?.children??[]));
+  };
+};
+// const BsDiv = (klass) => {
+//   return (attrs, children) => {
+//     const sub_attrs = {};
+//     Object.assign(sub_attrs, attrs);
+//     if (sub_attrs?.className?.length) {
+//       sub_attrs.className += ` ${klass}`;
+//     } else {
+//       sub_attrs.className = `${klass}`;
+//     };
+//     return vNode('div', sub_attrs, ...children);
+//   };
+// };
+const BsContainer = BsDiv("container");
+const BsRow = BsDiv("row");
+const BsCol = BsDiv("col");
+
+
 
 
 // const recommended_controls = {
@@ -49,41 +59,35 @@ const { FormItem, FormList } = Form;
 //   array_of_labeleds: [],
 // };
 
-const makeCompont = () => {
-  const myClass = class extends Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        xx: new Date(),
-        yy: new Date(),
-      };
-    }
-    componentDidMount() {
-      this.someTaskID = setInterval(
-        () => this.doSomeTask(),
-        1000
-      );
-    }
-    componentWillUnmount() {
-      clearInterval(this.someTaskID);
-    }
-
-    doSomeTask = () => {
-      this.setState({xx: new Date()});
-    }
-
-    render() {
-      return vNode();
-    }
-  };
+const control_methods = [
+  "reference",
+  "input",
+  "switch",
+  "select_one",
+  "select_some",
+  "input_one_by_one",
+  "config_one_by_one",
+  "select_control_and_act",
+];
+const Controllers = {
+  "reference": {},
+  "input": {},
+  "switch": {},
+  "select_one": {},
+  "select_some": {},
+  "input_one_by_one": {},
+  "config_one_by_one": {},
+  "select_control_and_act": {},
 };
 
 
 
-const logger = function logger ({content, style, duration, details}) {
-  const style_ = (MessagePlugin[style]!=null) ? style : "info";
-  MessagePlugin[style_]?.(content??JSON.stringify(details));
-};
+
+
+
+
+
+
 
 const 控件_选择构架 = class extends Component {
   constructor(props={}) {
@@ -106,16 +110,23 @@ const 控件_选择构架 = class extends Component {
 
 const 组件_单个字段的包裹 = class extends Component {
   constructor(props={}) {
+
+    // field 定义
+    // 要使用的控件
+
     super(props);
+
     // 1  选择具体哪种控件
     // 2  编辑状态
     // 3  只读状态 不要了
     this.state = {
-      field: {},
+      controller: "",
     };
   }
   async componentDidMount() {}
   render() {
+    // 选择控件
+    // 切换 只读 可编辑
   }
 };
 
@@ -136,14 +147,23 @@ const 整个表单 = class extends Component {
     super(props);
     this.state = {
       schemas: [],
+      fields: [],
+      lines: [],
     };
   }
   async componentDidMount() {
+    const logger = function logger ({content, style, duration, details}) {
+      const style_ = (MessagePlugin[style]!=null) ? style : "info";
+      MessagePlugin[style_]?.(content??JSON.stringify(details));
+    };
     await engine.init({logger: logger});
     const schemas = engine?.profile?.schemas ?? [];
     this.setState({schemas: schemas});
   }
   render() {
+    // return BsContainer(null, this.state.lines.map(line=>BsRow(null, vNode('div'))));
+    return vNode(BsContainer, null, this.state.lines.map(line=>BsRow(null, vNode('div'))));
+    return vNode('div');
   }
 };
 
@@ -230,10 +250,12 @@ export default function EntryCreatePage() {
     onReset,
   }, [
 
-    vNode(FormItem, {
-      label: "构架",
-      name: "_schema",
-    }, vNode(控件_选择构架, {className: "flag1"})),
+    vNode(整个表单),
+
+    // vNode(FormItem, {
+    //   label: "构架",
+    //   name: "_schema",
+    // }, vNode(控件_选择构架, {className: "flag1"})),
 
     vNode(FormItem, {
       label: "名称",
@@ -272,4 +294,49 @@ export default function EntryCreatePage() {
     ])),
   ]);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 没用的草稿
+
+const makeCompont = () => {
+  const myClass = class extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        xx: new Date(),
+        yy: new Date(),
+      };
+    }
+    componentDidMount() {
+      this.someTaskID = setInterval(
+        () => this.doSomeTask(),
+        1000
+      );
+    }
+    componentWillUnmount() {
+      clearInterval(this.someTaskID);
+    }
+
+    doSomeTask = () => {
+      this.setState({xx: new Date()});
+    }
+
+    render() {
+      return vNode();
+    }
+  };
+};
+
 

@@ -94,14 +94,15 @@ class Request {
         };
       };
       const wrapped = await this.wrapResponse(res);
-      if (retryCount>0) {
-        const refreshed = await this.ensureAccessByRefresh(wrapped);
-        if (refreshed) {
-          console.log("refreshed");
-          params.headers.authorization = null;
-          return this.request(path, params, callback, retryCount-1);
-        };
-      };
+      // TODO
+      // if (retryCount>0) {
+      //   const refreshed = await this.ensureAccessByRefresh(wrapped);
+      //   if (refreshed) {
+      //     console.log("refreshed");
+      //     params.headers.authorization = null;
+      //     return this.request(path, params, callback, retryCount-1);
+      //   };
+      // };
       callback?.({path, params, wrapped});
       return wrapped;
       // if (res?.ok || res?.status==200) {
