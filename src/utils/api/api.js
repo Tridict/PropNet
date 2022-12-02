@@ -116,6 +116,10 @@ export class UserApi {
       storage.setItem("access_token", data?.access_token);
       storage.setItem("refresh_token", data?.refresh_token);
       storage.setItem("current_user", data?.user);
+
+      storage.setItem("access_token_expired", false);
+      storage.setItem("have_tried_to_refresh_access_token", false);
+      storage.setItem("refresh_token_expired", false);
     };
     return wrapped;
   }
@@ -129,12 +133,22 @@ export class UserApi {
   }
 
   static async logout(callback) {
-    const wrapped = await request.post(`/api/user/actions/logout`, {
-      access_token: storage.getItem("access_token"),
-      refresh_token: storage.getItem("refresh_token"),
-    }, null, callback);
+    const access_token = storage.getItem("access_token");
+    const refresh_token = storage.getItem("refresh_token");
+
     storage.removeItem("access_token");
     storage.removeItem("refresh_token");
     storage.removeItem("current_user");
+
+    const wrapped = await request.post(`/api/user/actions/logout`, {
+      access_token: access_token,
+      refresh_token: refresh_token,
+    }, null, callback);
+
+    if (wrapped?.data?.ok) {
+      storage.removeItem("current_user");
+    };
+
+    return wrapped;
   }
 }

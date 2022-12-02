@@ -16,8 +16,12 @@ import EntryCreatePage from "./views/entry/entryCreate.js";
 import ErrorPage from "./views/error-page/error-page.js";
 import { ThemeContext, themes } from "./utils/theme.js";
 import { MessagePlugin } from "../vendor/tdesign.min.js";
-import engine from "./utils/engine.js";
 
+import { UserApi } from "./utils/api/api.js";
+import storage from "./utils/store.js";
+
+
+// https://juejin.cn/post/7023712736869613581
 const router = ReactRouterDom.createHashRouter([
   {
     path: "/",
@@ -97,6 +101,7 @@ const router = ReactRouterDom.createHashRouter([
     ]
   },
 ]);
+// const navigate = ReactRouterDom.useNavigate();
 
 // console.log('router\n', router);
 
@@ -108,9 +113,16 @@ export function MyApp() {
   // };
 
   // useEffect(()=>{
-  //   engine.setLogger(logger);
-  //   engine.init();
+  //   // engine.setLogger(logger);
+  //   // engine.init();
   // }, []);
+
+  useEffect(()=>{
+    if (storage.getItem("refresh_token_expired")) {
+      MessagePlugin.warning("登录过期，请重新登录");
+      UserApi.logout();
+    };
+  }, []);
 
   return vNode(ThemeContext.Provider,
     { value: themes.dark },

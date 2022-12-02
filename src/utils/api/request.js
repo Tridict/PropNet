@@ -14,6 +14,7 @@ class Request {
     if (!resp?.ok && resp?.fetchError!=null) {
       console.log(resp.fetchError);
       return {
+        real: false,
         "content-type": "",
         ok: resp?.ok,
         status: -1,
@@ -24,6 +25,7 @@ class Request {
     // console.log(resp);
     const content_type = resp?.headers?.get("content-type") ?? "";
     const wrapped = {
+      real: true,
       // resp: resp,
       ok: resp?.ok,
       status: resp?.status,
@@ -50,23 +52,27 @@ class Request {
     return wrapped;
   }
 
-  async ensureAccessByRefresh(wrapped) {
-    if (wrapped.status==401&&wrapped?.data?.msg=="Token has expired") {
+  async refreshAccess() {
+    if (!storage.getItem("have_tried_to_refresh_access_token")) {
+      storage.setItem("have_tried_to_refresh_access_token", true);
       const wrapped_access_token = await this.post('/api/user/actions/refresh', null, {
         headers: {
           'authorization': `Bearer ${storage.getItem("refresh_token")}`,
         },
       });
-      // const wrapped_access_token = this.wrapResponse(access_token_resp);
       if (wrapped_access_token?.data?.data!=null) {
-        storage.setItem('access_token', wrapped_access_token.data.data);
-        return true;
+        const access_token = wrapped_access_token.data.data;
+        storage.setItem('access_token', access_token);
+        return {ok: true, access_token: access_token};
+      };
+      if (wrapped_access_token.status==401 && wrapped_access_token?.data?.msg?.includes?.("Token has expired")) {
+        storage.setItem("refresh_token_expired", true);
       };
     };
-    return false;
+    return {ok: false};
   }
 
-  async request(path, params, callback, retryCount=1) {
+  async request(path, params, callback) {
     try {
       const access_token = storage.getItem("access_token");
       if (access_token?.length) {
@@ -94,15 +100,28 @@ class Request {
         };
       };
       const wrapped = await this.wrapResponse(res);
-      // TODO
-      // if (retryCount>0) {
-      //   const refreshed = await this.ensureAccessByRefresh(wrapped);
-      //   if (refreshed) {
-      //     console.log("refreshed");
-      //     params.headers.authorization = null;
-      //     return this.request(path, params, callback, retryCount-1);
-      //   };
-      // };
+
+
+      if (wrapped.status==401 && wrapped?.data?.msg?.includes?.("Token has expired")) {
+        if (!storage.getItem("have_tried_to_refresh_access_token")) {
+          storage.setItem("access_token_expired", true);
+          const result = await this.refreshAccess();
+
+          if (result?.ok) {
+            params.headers.authorization = result?.access_token ? `Bearer ${result?.access_token}` : null;
+            storage.setItem("access_token_expired", false);
+            storage.setItem("have_tried_to_refresh_access_token", false);
+            return this.request(path, params, callback);
+          };
+          storage.setItem("have_tried_to_refresh_access_token", true);
+        };
+      };
+
+      wrapped.access_token_expired = storage.getItem("access_token_expired");
+      wrapped.have_tried_to_refresh_access_token = storage.getItem("have_tried_to_refresh_access_token");
+      wrapped.refresh_token_expired = storage.getItem("refresh_token_expired");
+
+
       callback?.({path, params, wrapped});
       return wrapped;
       // if (res?.ok || res?.status==200) {

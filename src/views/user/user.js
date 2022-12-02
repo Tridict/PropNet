@@ -12,10 +12,12 @@ const { useNavigate } = ReactRouterDom;
 
 export default function User() {
   const navigate = useNavigate();
+  const access_token = storage.getItem('access_token');
+  const refresh_token = storage.getItem('refresh_token');
   const username = storage.getItem('current_user')?.username;
 
   useEffect(() => {
-    if (!username) {
+    if (!username || !access_token || !refresh_token) {
       navigate('../login');
     }
   });
@@ -53,11 +55,15 @@ export default function User() {
     logout((({wrapped})=>{
       if (wrapped?.ok) {
         MessagePlugin.success("登出成功");
+        navigate('../login');
       } else {
-        MessagePlugin.warning("登出发生异常" + JSON.stringify(wrapped));
+        storage.removeItem("access_token");
+        storage.removeItem("refresh_token");
+        storage.removeItem("current_user");
+        MessagePlugin.warning("登出发生异常但没关系" + JSON.stringify(wrapped));
+        navigate('../login');
       };
     }));
-    navigate('../login');
   } 
   return vNode('div', null, [
     vNode('p', null, '欢迎，'+username+'！'),
