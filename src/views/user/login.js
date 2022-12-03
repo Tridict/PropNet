@@ -52,45 +52,49 @@ export function Login() {
     setCheckedRememberUser(value);
   }
 
-  return vNode(Form, {
-        form,
-        onSubmit,
-        onReset,
-        colon: true,
-        rules,
-      }, vNode(Space, {direction: 'vertical'}, [
-        vNode(FormItem, {name: 'account', initialData: storage.getItem('cache_account')}, 
-          vNode(Input, {
-            placeholder: '请输入账户名',
-            autocomplete: 'username',
-          })
-        ),
-        vNode(FormItem, {name: 'password'}, 
-          vNode(Input, {
-            type: 'password',
-            placeholder: '请输入密码',
-            autocomplete: 'current-password',
-          })
-        ),
-        vNode(Space, null, [
-          '记住用户名',
-          vNode(Switch, {
-            value: checkedRememberUser,
-            onChange: onToggleRememberUser,
-          })]
-        ),
-        vNode(FormItem, null, vNode(Space, null, [
-          vNode(Button, {
-            theme: 'primary',
-            type: 'submit',
-          }, '登录'),
-          vNode(Button, {
-            theme: 'default',
-            type: 'reset',
-            variant: 'base',
-          }, '重置'),
-        ]))
-      ]));
+  const theForm = () => vNode(Form, {
+    form,
+    onSubmit,
+    onReset,
+    colon: true,
+    rules,
+  }, vNode(Space, {direction: 'vertical'}, [
+    vNode(FormItem, {name: 'account', initialData: storage.getItem('cache_account')}, 
+      vNode(Input, {
+        placeholder: '请输入账户名',
+        autocomplete: 'username',
+      })
+    ),
+    vNode(FormItem, {name: 'password'}, 
+      vNode(Input, {
+        type: 'password',
+        placeholder: '请输入密码',
+        autocomplete: 'current-password',
+      })
+    ),
+    vNode(Space, null, [
+      '记住用户名',
+      vNode(Switch, {
+        value: checkedRememberUser,
+        onChange: onToggleRememberUser,
+      })]
+    ),
+    vNode(FormItem, null, vNode(Space, null, [
+      vNode(Button, {
+        theme: 'primary',
+        type: 'submit',
+      }, '登录'),
+      vNode(Button, {
+        theme: 'default',
+        type: 'reset',
+        variant: 'base',
+      }, '重置'),
+    ]))
+  ]));
+
+  return vNode('div', {
+    className: "container m-4 py-2 px-2",
+  }, theForm());
 }
 
 export function Register() {
@@ -136,47 +140,58 @@ export function Register() {
     console.log(e);
   };
 
-  return vNode(Form, {
-        form,
-        statusIcon: true,
-        onSubmit,
-        onReset,
-        rules,
-      },  vNode(Space, {direction: 'vertical'}, [
-    vNode(FormItem, {name: 'email'}, [
-      vNode(Input, {
-        placeholder: '请输入您的email',
-      })
-    ]),
-    vNode(FormItem, {name: 'username'}, [
-      vNode(Input, {
-        placeholder: '请输入账户名',
-      })
-    ]),
-    vNode(FormItem, {name: 'password'}, [
-      vNode(Input, {
-        type: 'password',
-        placeholder: '请输入密码',
-        autocomplete: 'current-password',
-      })
-    ]),
-    vNode(FormItem, {name: 'rePassword'}, [
-      vNode(Input, {
-        type: 'password',
-        placeholder: '请再次确认密码',
-      })
-    ]),
-    vNode(FormItem, null, 
-      vNode(Button, {
-        theme: 'primary',
-        type: 'submit',
-      }, '注册'))
+  const theForm = () => vNode(Form, {
+      form,
+      statusIcon: true,
+      onSubmit,
+      onReset,
+      rules,
+    },  vNode(Space, {direction: 'vertical'}, [
+  vNode(FormItem, {name: 'email'}, [
+    vNode(Input, {
+      placeholder: '请输入您的email',
+    })
+  ]),
+  vNode(FormItem, {name: 'username'}, [
+    vNode(Input, {
+      placeholder: '请输入账户名',
+    })
+  ]),
+  vNode(FormItem, {name: 'password'}, [
+    vNode(Input, {
+      type: 'password',
+      placeholder: '请输入密码',
+      autocomplete: 'current-password',
+    })
+  ]),
+  vNode(FormItem, {name: 'rePassword'}, [
+    vNode(Input, {
+      type: 'password',
+      placeholder: '请再次确认密码',
+    })
+  ]),
+  vNode(FormItem, null, 
+    vNode(Button, {
+      theme: 'primary',
+      type: 'submit',
+    }, '注册'))
   ]));
+
+  return vNode('div', {
+    className: "container m-4 py-2 px-2",
+  }, theForm());
 }
 
 export default function LoginHome() {
-  return vNode(Tabs, {defaultValue: 1, className: 'login'}, [
+  const main = () => vNode(Tabs, {defaultValue: 1, className: 'login'}, [
     vNode(TabPanel, {value: 1, label: '登录'}, vNode(Login)),
     vNode(TabPanel, {value: 2, label: '注册'}, vNode(Register)),
   ]);
+  return vNode('div', {
+    className: "container",
+    style: {
+      margin: "0 auto",
+      "max-width": "400px",
+    },
+  }, main());
 }

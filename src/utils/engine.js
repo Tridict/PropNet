@@ -1,31 +1,38 @@
 import storage from "./store.js";
+import controls_js from "./controls.js";
+const { FormControlMap } = controls_js;
 import { AppApi } from "./api/api.js";
 // import { EntryApi } from "./api/api.js";
 // const { createEntries } = EntryApi;
 
 
-const data_form_options = [
-  "string",
-  "labeled",
-  "number",
-  "boolean",
-  "range",
-  "array",
-  "dict",
-  "null",
-  "mixed",
-  "any",
-];
-const control_methods = [
-  "reference",
-  "input",
-  "switch",
-  "select_one",
-  "select_some",
-  "input_one_by_one",
-  "config_one_by_one",
-  "select_control_and_act",
-];
+// const data_form_options = [
+//   "string",
+//   "labeled",
+//   "number",
+//   "boolean",
+//   "range",
+//   "array",
+//   "dict",
+//   "null",
+//   "mixed",
+//   "any",
+// ];
+const data_form_options = Object.keys(FormControlMap);
+// const control_methods = [
+//   "reference",
+//   "input",
+//   "textarea",
+//   "switch",
+//   "select_one",
+//   "select_some",
+//   "input",
+//   "config_one_by_one",
+//   "select_control_and_act",
+// ];
+const control_methods = Array.from(new Set(Object.values(FormControlMap).map(it=>Object.keys(it)).flat()));
+
+
 const DefaultProfile = {
   version: null,
   schemas: [
@@ -40,6 +47,11 @@ const DefaultProfile = {
           field_name: "name",
           data_form: "string",
           control_method: "input",
+        },
+        {
+          field_name: "desc",
+          data_form: "string",
+          control_method: "textarea",
         },
         {
           field_name: "instance_name",
@@ -72,28 +84,52 @@ const DefaultProfile = {
       // _refer_to: "schemas/SchemaFieldSchema",
       _schema: "SchemaSchema",
       name: "SchemaFieldSchema",
+      desc: "Schema to create SchemaField",
       instance_name: "SchemaField",
+      instance_desc: "A field in a Schema",
       data_form: "dict",
       fields: [
         // 公共
         {
+          field_name: "sadf",
+          desc: "regsdf",
+          data_form: "dict",
+          control_method: "input",
+          required: true,
+        },
+        {
           field_name: "field_name",
+          desc: "字段名称",
           data_form: "string",
           control_method: "input",
           required: true,
         },
         {
+          field_name: "desc",
+          data_form: "string",
+          control_method: "textarea",
+        },
+        {
           field_name: "data_form",
           data_form: "labeled",
-          control_method: "select_one",
+          control_methods: ["select", "ratio", "buttons"],
           options: data_form_options,
           default: "any",
+          preload: true,
         },
         {
           field_name: "required",
           data_form: "boolean",
           control_methods: ["switch", "select_one"],
           default: false,
+          preload: true,
+        },
+        {
+          field_name: "preload",
+          data_form: "boolean",
+          control_methods: ["switch"],
+          default: false,
+          preload: true,
         },
         {
           field_name: "default",
@@ -122,7 +158,7 @@ const DefaultProfile = {
           field_name: "options",
           variant: 0,
           data_form: "array",
-          control_method: "input_one_by_one",
+          control_method: "input",
           item_schema: {
             data_form: "string",
           },
@@ -212,9 +248,9 @@ class Engine {
     this.log({content: `已重置 profile 为 DefaultProfile 。`, style: "info"});
     return this;
   }
-  async init({logger}) {
-    if (logger!=null) {
-      this.setLogger(logger);
+  async init(config) {
+    if (config?.logger!=null) {
+      this.setLogger(config?.logger);
     };
     const stored_version = this.storedProfile?.version;
     const wrapped_version = await AppApi.getVersion((({wrapped})=>{

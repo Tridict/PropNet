@@ -95,6 +95,14 @@ export default function Home() {
         className: "container app-main-content-wrap",
       }, vNode(ReactRouterDom.Outlet)))),
     ),
-    vNode(Layout.Footer, {className: 'app-footer'}, 'Copyright @ 2022 Tridict. All Rights Reserved'),
+    vNode(Layout.Footer, {className: 'app-footer'},
+      vNode('div', {
+        className: "app-footer-container container"
+      }, vNode('div', {
+        className: "row",
+      }, vNode('div', {
+        className: "col",
+      }, 'Copyright @ 2022 Tridict. All Rights Reserved'))),
+    ),
   ]);
 }
