@@ -222,6 +222,19 @@ const FormControlMap = {
   },
 };
 
+const SELF = {
+  FormControlMap,
+
+  TD_Select_for_Labeled,
+
+  My_DictEditor,
+
+};
+
+export default SELF;
+
+// 下面是要实现的组件 供参考
+
 const TD_CompontentMap = {
   "TD_Select_for_Labeled": {
     component_name: "Select",
@@ -326,14 +339,3 @@ const My_CompontentMap = {
   "My_FreeEditor": {},
   "My_FreeEditor": {},
 };
-
-const SELF = {
-  FormControlMap,
-
-  TD_Select_for_Labeled,
-
-  My_DictEditor,
-
-};
-
-export default SELF;
