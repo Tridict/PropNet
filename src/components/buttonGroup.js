@@ -1,5 +1,5 @@
-import { createElement as vNode } from "../../../vendor/react.js";
-import { Button, Tooltip } from "../../../vendor/tdesign.min.js";
+import { createElement as vNode } from "../../vendor/react.js";
+import { Button, Tooltip } from "../../vendor/tdesign.min.js";
 
 const makeButtonGroup = options => options.map((opt, idx) => (opt.type==null||['btn', 'button'].includes(opt?.type?.toLowerCase?.())) ? vNode(Tooltip, {
   content: opt.tooltip ?? opt.name,

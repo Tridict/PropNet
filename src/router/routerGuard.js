@@ -4,13 +4,14 @@ import { MessagePlugin } from "../../vendor/tdesign.min.js";
 import { UserApi } from "../utils/api/api.js";
 import storage from "../utils/store.js";
 
-const { useLocation, useNavigate, useRoutes } = ReactRouterDom;
+const BASE_PATH = '';
+
+const { useLocation, useNavigate, useRoutes, matchPath } = ReactRouterDom;
 
 // 找到当前path的路由配置信息
 function searchRouterDetail(path, routes) {
-  path = path.replace('/', '');
   for (const item of routes) {
-    if (item.path===path) return item;
+    if (matchPath(item.path, path)) return item;
     if (item.children) {
       return searchRouterDetail(path, item.children);
     }
@@ -22,7 +23,7 @@ function guard(location, navigate, routes) {
   const { pathname } = location;
   const routeDetail = searchRouterDetail(pathname, routes);
   if (!routeDetail) {
-    return navigate('/404');
+    return navigate(BASE_PATH+'/404');
   }
 
   // 权限验证
@@ -30,14 +31,14 @@ function guard(location, navigate, routes) {
     if (storage.getItem("refresh_token_expired")) {
       MessagePlugin.warning("登录过期，请重新登录");
       UserApi.logout();
-      return navigate('/login');
+      return navigate(BASE_PATH+'/login');
     };
     const access_token = storage.getItem('access_token');
     const refresh_token = storage.getItem('refresh_token');
     const username = storage.getItem('current_user')?.username;
     if (!username || !access_token || !refresh_token) {
       MessagePlugin.warning("请登录");
-      return navigate('/login');
+      return navigate(BASE_PATH+'/login');
     }
   }
 }

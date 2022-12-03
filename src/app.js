@@ -1,4 +1,4 @@
-import { createElement as vNode, useEffect } from "../vendor/react.js";
+import { createElement as vNode } from "../vendor/react.js";
 import ReactRouterDom from "../vendor/react-router-dom.js";
 import { routerGuard } from "./router/routerGuard.js";
 import Home from "./views/home/home.js";
@@ -15,12 +15,8 @@ import Items, {loader as itemLoader, ItemDetail} from "./views/item/items.js";
 import ItemCreatePage from "./views/item/itemCreate.js";
 import EntryCreatePage from "./views/entry/entryCreate.js";
 import ErrorPage from "./views/error-page/error-page.js";
+import PageNotFound from "./views/404/404.js";
 import { ThemeContext, themes } from "./utils/theme.js";
-import { MessagePlugin } from "../vendor/tdesign.min.js";
-
-import { UserApi } from "./utils/api/api.js";
-import storage from "./utils/store.js";
-
 
 const routes = [
   {
@@ -28,6 +24,10 @@ const routes = [
     element: vNode(Home),
     errorElement: vNode(ErrorPage),
     children: [
+      {
+        path: "404",
+        element: vNode(PageNotFound),
+      },
       {
         // 条目检索页，查询结果页为?kw=key_word
         path: "items",
