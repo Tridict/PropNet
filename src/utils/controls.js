@@ -50,7 +50,7 @@ const Controller_Wrapper = (props) => {
   ?? "My_FreeEditor";
 
 
-  const 具体控件区 = () => vNode('div', {}, vNode('div', {}, form_name), vNode('div', {}, JSON.stringify(control_options)), vNode('div', {}, selected_component_name), vNode(SELF?.[selected_component_name]??'div'));
+  const 具体控件区 = () => vNode('div', {}, vNode('div', {}, form_name), vNode('div', {}, JSON.stringify(control_options)), vNode('div', {}, selected_component_name), vNode(SELF?.[selected_component_name]??'div', {field: props?.field, data: props?.data, onDataChange: props?.onDataChange}));
 
   return vNode(BsContainer, null, [
     control_options.length>1 ? vNode(BsLine, {noLabel: true, rowMy: "my-2"}, 控件选择区()) : null,
@@ -63,19 +63,22 @@ const TD_Select_for_Labeled = (props) => {
   return vNode(TDesign['Select'], {
     filterable: true,
     creatable: props?.field?.creatable,
-    options: props?.field?.options,
+    options: (props?.field?.options??[]).map(it=>({label: it, value: it})),
+    defaultValue: props?.field?.default,
+    onDataChange: (newData)=>{props?.onDataChange(newData);},
   });
 };
 
 const My_DictEditor = (props) => {
-  const fields = props?.schema?.fields ?? [];
-  const init_data = props?.data ?? {};
-  const [data, set_data] = useState(init_data);
+  const schema = props?.field?.schema ?? {};
+  const fields = schema?.fields ?? [];
+  const init_dict_data = props?.data ?? {};
+  const [dict_data, set_dict_data] = useState(init_dict_data);
   // https://robinpokorny.com/blog/index-as-a-key-is-an-anti-pattern/
   return vNode(BsContainer, null,
     fields.map((field, idx)=>vNode(BsLine, {
       // key: `${field.field_name}-${idx}`,
-      key: `${props?.schema?.name}-${field.field_name}-${idx}`,
+      key: `${schema?.name}-${field.field_name}-${idx}`,
       idx: idx,
       label: field.field_name,
       tip: field?.desc,
@@ -83,8 +86,11 @@ const My_DictEditor = (props) => {
       // onChange: ()=>{},
     }, vNode(Controller_Wrapper, {
       field: field,
-      data: data?.[field?.field_name],
-      onDataChange: (newData)=>{set_data(newData);},
+      data: dict_data?.[field?.field_name],
+      onDataChange: (newData)=>{
+        set_dict_data(newData);
+        props?.onDataChange?.(dict_data);
+      },
     }))),
   );
 };

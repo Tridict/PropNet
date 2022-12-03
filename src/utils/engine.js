@@ -6,30 +6,7 @@ import { AppApi } from "./api/api.js";
 // const { createEntries } = EntryApi;
 
 
-// const data_form_options = [
-//   "string",
-//   "labeled",
-//   "number",
-//   "boolean",
-//   "range",
-//   "array",
-//   "dict",
-//   "null",
-//   "mixed",
-//   "any",
-// ];
 const data_form_options = Object.keys(FormControlMap);
-// const control_methods = [
-//   "reference",
-//   "input",
-//   "textarea",
-//   "switch",
-//   "select_one",
-//   "select_some",
-//   "input",
-//   "config_one_by_one",
-//   "select_control_and_act",
-// ];
 const control_methods = Array.from(new Set(Object.values(FormControlMap).map(it=>Object.keys(it)).flat()));
 
 
@@ -66,14 +43,14 @@ const DefaultProfile = {
         {
           field_name: "data_form",
           data_form: "labeled",
-          control_method: "select_one",
+          control_method: "select",
           options: data_form_options,
           default: "any",
         },
         {
           field_name: "fields",
           data_form: "array",
-          control_method: "config_one_by_one",
+          control_method: "add_one_by_one",
           item_schema: {
             _refer_to: "schemas/SchemaFieldSchema",
           },
@@ -120,7 +97,7 @@ const DefaultProfile = {
         {
           field_name: "required",
           data_form: "boolean",
-          control_methods: ["switch", "select_one"],
+          control_methods: ["switch", "select"],
           default: false,
           preload: true,
         },
@@ -141,16 +118,15 @@ const DefaultProfile = {
         {
           field_name: "control_method",
           data_form: "labeled",
-          control_method: "select_one",
+          control_method: "select",
           options: control_methods,
-          default: "select_control_and_act",
         },
         {
           field_name: "control_methods",
           data_form: "array",
-          control_method: "select_some",
+          control_method: "select",
           options: control_methods,
-          default: ["select_control_and_act"],
+          default: [],
         },
 
         {
@@ -168,7 +144,7 @@ const DefaultProfile = {
           field_name: "options",
           variant: 1,
           data_form: "array",
-          control_method: "config_one_by_one",
+          control_method: "add_one_by_one",
           item_schema: {
             data_form: "dict",
             schema: "SchemaFieldSchema",

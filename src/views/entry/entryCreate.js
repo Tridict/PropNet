@@ -81,7 +81,9 @@ const 整个表单 = (props) => {
   const [lines, set_lines] = useState([{}, {}]);
 
   const 核心区 = () => vNode(My_DictEditor, {
-    schema: current_schema,
+    field: {
+      schema: current_schema,
+    },
     data: data,
     onDataChange: (newData)=>{set_data(newData)},
   });
