@@ -65,9 +65,114 @@ const TD_Select_for_Labeled = (props) => {
     creatable: props?.field?.creatable,
     options: (props?.field?.options??[]).map(it=>({label: it, value: it})),
     defaultValue: props?.field?.default,
-    onDataChange: (newData)=>{props?.onDataChange(newData);},
+    onChange: (newData)=>{props?.onDataChange(newData);},
   });
 };
+
+export const TD_Radio_for_Labeled = (props) => {
+  return vNode(TDesign.Radio.Group, {
+    options: (props?.field?.options??[]).map(it=>({label: it, value: it})),
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_Radio_for_Boolean = (props) => {
+  return vNode(TDesign.Radio.Group, {
+    options: [{label: 'true', value: true}, {label: 'false', value: false}],
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_RadioButtons_for_Labeled = (props) => {
+  return vNode(TDesign.Radio.Group, {
+    options: (props?.field?.options??[]).map(it=>({label: it, value: it})),
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+    variant: "default-filled",
+  });
+};
+
+export const TD_RadioButtons_for_Boolean = (props) => {
+  return vNode(TDesign.Radio.Group, {
+    options: [{label: 'true', value: true}, {label: 'false', value: false}],
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+    variant: "default-filled",
+  });
+};
+
+export const TD_Rate_for_Labeled = (props) => {
+  const options = props?.field?.options ?? [];
+  return vNode(TDesign['Rate'], {
+    count: options.length,
+    texts: options,
+    showText: true,
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_Rate_for_Number = (props) => {
+  return vNode(TDesign['Rate'], {
+    count: props?.field?.max ?? 5,
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_Input = (props) => {
+  return vNode(TDesign['Input'], {
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_InputNumber = (props) => {
+  return vNode(TDesign['InputNumber'], {
+    max: props?.field?.max,
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_Slider_for_number = (props) => {
+  return vNode(TDesign['Slider'], {
+    max: props?.field?.max,
+    min: props?.field?.min ?? 0,
+    // label: true,
+    step: 1,
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_Textarea = (props) => {
+  return vNode(TDesign['Textarea'], {
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_Switch = (props) => {
+  return vNode(TDesign['Switch'], {
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_DatePicker = (props) => {
+  return vNode(TDesign['DatePicker'], {
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+
+// "TD_DatePicker": {
+//   component_name: "DatePicker",
+// },
 
 const My_DictEditor = (props) => {
   const schema = props?.field?.schema ?? {};
@@ -232,6 +337,7 @@ const SELF = {
   FormControlMap,
 
   TD_Select_for_Labeled,
+  TD_Radio_for_Labeled,
 
   My_DictEditor,
 
