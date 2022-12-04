@@ -97,7 +97,7 @@ const DefaultProfile = {
         {
           field_name: "required",
           data_form: "boolean",
-          control_methods: ["switch", "select"],
+          control_methods: ["switch", "ratio", "buttons"],
           default: false,
           preload: true,
         },
@@ -127,6 +127,9 @@ const DefaultProfile = {
           control_method: "select",
           options: control_methods,
           default: [],
+          item_schema: {
+            data_form: "labeled",
+          },
         },
 
         {

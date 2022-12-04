@@ -16,7 +16,7 @@ const {
 } = BS;
 
 
-const Controller_Wrapper = (props) => {
+export const Controller_Wrapper = (props) => {
   // 已指明的控件
   let specified_controls = (props?.field?.control_methods??[]);
   if (props?.field?.control_method != null) {
@@ -25,8 +25,8 @@ const Controller_Wrapper = (props) => {
 
   let form_name = props?.field?.data_form ?? "any";
   if (["array", "range"].includes(props?.field?.data_form)) {
-    if (props?.field?.data_form?.item_schema?.length) {
-      form_name += "_of_" + props?.field?.data_form?.item_schema;
+    if (props?.field?.item_schema?.data_form?.length) {
+      form_name += "_of_" + props?.field?.item_schema?.data_form;
     };
   };
 
@@ -37,7 +37,7 @@ const Controller_Wrapper = (props) => {
 
   const [selected_control_name, set_selected_control_name] = useState(specified_controls?.[0]);
   const 控件选择区 = () => vNode(InputAdornment, {
-    prepend: "请选择数据输入控件",
+    prepend: "选择控件",
   }, vNode(Select, {
     options: control_options,
     defaultValue: selected_control_name,
@@ -50,17 +50,40 @@ const Controller_Wrapper = (props) => {
   ?? "My_FreeEditor";
 
 
-  const 具体控件区 = () => vNode('div', {}, vNode('div', {}, form_name), vNode('div', {}, JSON.stringify(control_options)), vNode('div', {}, selected_component_name), vNode(SELF?.[selected_component_name]??'div', {field: props?.field, data: props?.data, onDataChange: props?.onDataChange}));
+  const 具体控件区 = () => vNode('div', {},
+    SELF?.[selected_component_name] ? vNode(SELF[selected_component_name], {
+      field: props?.field,
+      data: props?.data,
+      onDataChange: props?.onDataChange,
+    }) : vNode('div', {}, selected_component_name),);
 
   return vNode(BsContainer, null, [
-    control_options.length>1 ? vNode(BsLine, {noLabel: true, rowMy: "my-2"}, 控件选择区()) : null,
+    control_options.length>1 ?
+    vNode(BsLine, {noLabel: true, rowMy: "my-2"}, 控件选择区()) : null,
+
     vNode(BsLine, {noLabel: true, rowMy: "my-2"}, 具体控件区()),
-    vNode(BsLine, {noLabel: true, rowMy: "my-2"}, JSON.stringify({field: props?.field, value: props?.data?.[props?.field?.field_name]})),
+
+    !SELF?.[selected_component_name] ?
+    [
+      vNode('div', {}, form_name),
+      vNode(BsLine, {noLabel: true, rowMy: "my-2"}, vNode("pre", {}, JSON.stringify({field: props?.field, data: props?.data}, null, 2))),
+    ] : null,
   ]);
 };
 
-const TD_Select_for_Labeled = (props) => {
+export const TD_Select_for_Labeled = (props) => {
   return vNode(TDesign['Select'], {
+    filterable: true,
+    creatable: props?.field?.creatable,
+    options: (props?.field?.options??[]).map(it=>({label: it, value: it})),
+    defaultValue: props?.field?.default,
+    onChange: (newData)=>{props?.onDataChange(newData);},
+  });
+};
+
+export const TD_Select_for_LabeledArray = (props) => {
+  return vNode(TDesign['Select'], {
+    multiple: true,
     filterable: true,
     creatable: props?.field?.creatable,
     options: (props?.field?.options??[]).map(it=>({label: it, value: it})),
@@ -87,11 +110,11 @@ export const TD_Radio_for_Boolean = (props) => {
 
 export const TD_RadioButtons_for_Labeled = (props) => {
   return vNode(TDesign.Radio.Group, {
-    options: (props?.field?.options??[]).map(it=>({label: it, value: it})),
+    // options: (props?.field?.options??[]).map(it=>({label: it, value: it})),
     defaultValue: props?.field?.default,
     onChange: (newData)=>{props?.onDataChange(newData);},
     variant: "default-filled",
-  });
+  }, (props?.field?.options??[]).map(it=>vNode(TDesign.Radio.Button, {value: it}, it)));
 };
 
 export const TD_RadioButtons_for_Boolean = (props) => {
@@ -100,7 +123,7 @@ export const TD_RadioButtons_for_Boolean = (props) => {
     defaultValue: props?.field?.default,
     onChange: (newData)=>{props?.onDataChange(newData);},
     variant: "default-filled",
-  });
+  }, ([true, false]).map(it=>vNode(TDesign.Radio.Button, {value: it}, `${it}`)));
 };
 
 export const TD_Rate_for_Labeled = (props) => {
@@ -157,6 +180,7 @@ export const TD_Textarea = (props) => {
 
 export const TD_Switch = (props) => {
   return vNode(TDesign['Switch'], {
+    label: ['false', 'true'],
     defaultValue: props?.field?.default,
     onChange: (newData)=>{props?.onDataChange(newData);},
   });
@@ -174,7 +198,7 @@ export const TD_DatePicker = (props) => {
 //   component_name: "DatePicker",
 // },
 
-const My_DictEditor = (props) => {
+export const My_DictEditor = (props) => {
   const schema = props?.field?.schema ?? {};
   const fields = schema?.fields ?? [];
   const init_dict_data = props?.data ?? {};
@@ -336,11 +360,23 @@ const FormControlMap = {
 const SELF = {
   FormControlMap,
 
+  Controller_Wrapper,
   TD_Select_for_Labeled,
+  TD_Select_for_LabeledArray,
   TD_Radio_for_Labeled,
+  TD_Radio_for_Boolean,
+  TD_RadioButtons_for_Labeled,
+  TD_RadioButtons_for_Boolean,
+  TD_Rate_for_Labeled,
+  TD_Rate_for_Number,
+  TD_Input,
+  TD_InputNumber,
+  TD_Slider_for_number,
+  TD_Textarea,
+  TD_Switch,
+  TD_DatePicker,
 
   My_DictEditor,
-
 };
 
 export default SELF;
@@ -348,51 +384,53 @@ export default SELF;
 // 下面是要实现的组件 供参考
 
 const TD_CompontentMap = {
-  "TD_Select_for_Labeled": {
-    component_name: "Select",
-    initial_props: {filterable: true, creatable: undefined,},
-  },
-  "TD_Radio_for_Labeled": {
-    component_name: "Radio",
-  },
-  "TD_Rate_for_Labeled": {
-    component_name: "Rate",
-  },
-  "TD_RadioButtons_for_Labeled": {
-    component_name: "Radio",
-    initial_props: {variant: "default-filled",},
-  },
-  "TD_Input": {
-    component_name: "Input",
-  },
-  "TD_Textarea": {
-    component_name: "Textarea",
-  },
-  "TD_InputNumber": {
-    component_name: "InputNumber",
-  },
-  "TD_Rate_for_Number": {
-    component_name: "Rate",
-  },
-  "TD_Slider_for_number": {
-    component_name: "Slider",
-  },
-  "TD_Switch": {
-    component_name: "Switch",
-  },
-  "TD_Radio_for_Boolean": {
-    component_name: "Radio",
-  },
-  "TD_RadioButtons_for_Boolean": {
-    component_name: "Radio",
-    initial_props: {variant: "default-filled",},
-  },
+  // "TD_Select_for_Labeled": {
+  //   component_name: "Select",
+  //   initial_props: {filterable: true, creatable: undefined,},
+  // },
+  // "TD_Radio_for_Labeled": {
+  //   component_name: "Radio",
+  // },
+  // "TD_Rate_for_Labeled": {
+  //   component_name: "Rate",
+  // },
+  // "TD_RadioButtons_for_Labeled": {
+  //   component_name: "Radio",
+  //   initial_props: {variant: "default-filled",},
+  // },
+  // "TD_Input": {
+  //   component_name: "Input",
+  // },
+  // "TD_Textarea": {
+  //   component_name: "Textarea",
+  // },
+  // "TD_InputNumber": {
+  //   component_name: "InputNumber",
+  // },
+  // "TD_Rate_for_Number": {
+  //   component_name: "Rate",
+  // },
+  // "TD_Slider_for_number": {
+  //   component_name: "Slider",
+  // },
+  // "TD_Switch": {
+  //   component_name: "Switch",
+  // },
+  // "TD_Radio_for_Boolean": {
+  //   component_name: "Radio",
+  // },
+  // "TD_RadioButtons_for_Boolean": {
+  //   component_name: "Radio",
+  //   initial_props: {variant: "default-filled",},
+  // },
+
   "TD_DatePicker": {
     component_name: "DatePicker",
   },
   "TD_TimePicker": {
     component_name: "TimePicker",
   },
+
   "TD_RangeInput": {
     component_name: "RangeInput",
   },
@@ -406,10 +444,11 @@ const TD_CompontentMap = {
   "TD_TimeRangePicker": {
     component_name: "TimeRangePicker",
   },
-  "TD_Select_for_LabeledArray": {
-    component_name: "Select",
-    initial_props: {multiple: true, filterable: true, creatable: undefined,},
-  },
+
+  // "TD_Select_for_LabeledArray": {
+  //   component_name: "Select",
+  //   initial_props: {multiple: true, filterable: true, creatable: undefined,},
+  // },
   "TD_SelectInput_for_LabeledArray": {
     component_name: "SelectInput",
   },
