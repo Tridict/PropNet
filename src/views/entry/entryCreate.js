@@ -78,15 +78,35 @@ const 整个表单 = (props) => {
     }, "确认"),
   ])));
 
-  const [lines, set_lines] = useState([{}, {}]);
+  const [json_data, set_json_data] = useState("");
 
   const 核心区 = () => vNode(My_DictEditor, {
+    borderless: true,
     field: {
+      data_format: "dict",
       schema: current_schema,
     },
     data: data,
-    onDataChange: (newData)=>{set_data(newData)},
+    onDataChange: (newData)=>{
+      // console.log(JSON.stringify(data, null, 2));
+      // console.log(JSON.stringify(newData, null, 2));
+      set_json_data(JSON.stringify(newData, null, 2));
+      // console.log(json_data);
+    },
+    onSave: (newData)=>{
+      set_data(newData);
+      // console.log(JSON.stringify(data, null, 2));
+      // console.log(JSON.stringify(newData, null, 2));
+      set_json_data(JSON.stringify(newData, null, 2));
+      // console.log(json_data);
+    },
   });
+
+  const 临时数据显示区 = () => vNode(BsContainer, {}, [
+    vNode(BsLine, {}, [
+      vNode('pre', {className: "border rounded p-2"}, json_data),
+    ]),
+  ]);
 
   const 顶部标题区 = () => vNode(BsContainer, {}, vNode("h3", {
   }, `新建 ${current_schema?.instance_name??"对象"}`), current_schema?.instance_desc ? vNode("p", {
@@ -98,14 +118,6 @@ const 整个表单 = (props) => {
   }, vNode(BsLine, {
     label: "当前 Schema",
   }, schema_name_face));
-
-  const 添加预设字段区 = () => vNode(BsContainer, {}, vNode(BsLine, {
-    label: "更多字段(预设)",
-    // children: "hello",
-  }, []));
-  const 添加自定义字段区 = () => vNode(BsContainer, {}, vNode(BsLine, {
-    label: "更多字段(自定义)",
-  }, []));
 
   const 底部按钮区 = () => vNode(BsContainer, {}, vNode(BsLine, {
     // label: "底部按钮区",
@@ -136,15 +148,12 @@ const 整个表单 = (props) => {
   ])));
 
   return vNode('div', null, [
+    vNode('div', {className: `my-4`}, vNode(临时数据显示区)),
     vNode('div', {className: `my-4`}, 顶部标题区()),
     schema_selected ? [
       vNode('div', {className: `my-4`}, 构架名称区()),
     ] : null,
-    vNode('div', {className: `my-4${schema_selected?'':' d-none'}`}, 核心区()),
-    schema_selected ? [
-      vNode('div', {className: `my-4`}, 添加预设字段区()),
-      vNode('div', {className: `my-4`}, 添加自定义字段区()),
-    ] : null,
+    vNode('div', {className: `my-4${schema_selected?'':' d-none'}`}, vNode(核心区)),
     vNode('div', {className: `my-4${(!schema_selected)?'':' d-none'}`}, 构架选择区()),
     vNode('div', {className: `my-4`}, 底部按钮区()),
   ]);

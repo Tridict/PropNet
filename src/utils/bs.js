@@ -1,4 +1,5 @@
 import { createElement as vNode } from "../../../vendor/react.js";
+import { Tooltip, Button } from "../../vendor/tdesign.min.js";
 
 const BsDiv = (klass) => {
   return (props) => {
@@ -39,9 +40,23 @@ const BsLine = (props) => {
     className: `${props?.rowMy??"my-4"} d-flex align-items-center`,
   }, ...[
     vNode(BsCol, {
-      className: "col-12 col-sm-12 col-md-3 col-lg-2",
-      title: props?.tip,
-    }, (props?.label)),
+      className: `col-12 col-sm-12 col-md-3 col-lg-2 ${props?.labelClass??''}`,
+      // title: props?.tip,
+    }, [
+      (props?.label),
+      props?.tip ? vNode(Tooltip, {
+        placement: "top-left",
+        showArrow: false,
+        content: props?.tip,
+      }, vNode(Button, {
+        className: "ms-1 cursor-help-important text-muted",
+        shape: "circle",
+        size: "small",
+        variant: "text",
+        // ghost: true,
+        theme: "default",
+      }, "(?)")) : null,
+    ]),
     vNode(BsCol, {
       className: "col-12 col-sm-12 col-md-9 col-lg-10",
     }, props?.children),

@@ -101,7 +101,7 @@ export default function Home() {
       }, vNode('div', {
         className: "row",
       }, vNode('div', {
-        className: "col",
+        className: "col text-center",
       }, 'Copyright @ 2022 Tridict. All Rights Reserved'))),
     ),
   ]);

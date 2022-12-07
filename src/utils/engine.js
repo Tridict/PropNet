@@ -69,9 +69,18 @@ const DefaultProfile = {
         // 公共
         {
           field_name: "sadf",
-          desc: "regsdf",
+          desc: "regsdfdafaw afasdfas awefwaefds asefwdsf bgdsfbasdfv asfdgv",
           data_form: "dict",
           control_method: "input",
+          required: true,
+        },
+        {
+          field_name: "aweasd",
+          desc: "regsdf",
+          data_form: "number",
+          control_method: "rate",
+          min: -10,
+          max: 10,
           required: true,
         },
         {
@@ -89,7 +98,7 @@ const DefaultProfile = {
         {
           field_name: "data_form",
           data_form: "labeled",
-          control_methods: ["select", "ratio", "buttons"],
+          control_methods: ["select", "ratio", "buttons", "rate"],
           options: data_form_options,
           default: "any",
           preload: true,
