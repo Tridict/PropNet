@@ -57,30 +57,36 @@ const 整个表单 = (props) => {
   const 构架选择区 = () => vNode(BsContainer, {}, vNode(BsLine, {
     label: "选择 Schema",
   }, vNode('div', {className: "hstack gap-2"}, [
-    vNode(Select, {
-      // autoWidth: true,
-      filterable: true,
-      options: schema_options,
-      onChange: (value, context)=>{
-        if (value!=null) {
-          const schema = engine?.profile?.schemas?.find?.(it=>it.name==value);
-          set_current_schema(schema);
-        } else {
-          set_current_schema(null);
-        };
-      },
-    }),
+    // vNode('div', {
+    //   className: "d-inline-block",
+    // }, [
+      vNode(Select, {
+        // autoWidth: true,
+        filterable: true,
+        options: schema_options,
+        onChange: (value, context)=>{
+          if (value!=null) {
+            const schema = engine?.profile?.schemas?.find?.(it=>it.name==value);
+            set_current_schema(schema);
+          } else {
+            set_current_schema(null);
+          };
+        },
+      }),
+    // ]),
     vNode(Button, {
       theme: "default",
       onClick: ()=>{
         set_schema_selected(true);
       },
-    }, "确认"),
+    }, "确定"),
   ])));
 
   const [json_data, set_json_data] = useState("");
 
   const 核心区 = () => vNode(My_DictEditor, {
+    formControlMap: controls_js?.FormControlMap,
+    componentsDict: controls_js,
     borderless: true,
     field: {
       data_format: "dict",
@@ -148,13 +154,13 @@ const 整个表单 = (props) => {
   ])));
 
   return vNode('div', null, [
-    vNode('div', {className: `my-4`}, vNode(临时数据显示区)),
     vNode('div', {className: `my-4`}, 顶部标题区()),
     schema_selected ? [
       vNode('div', {className: `my-4`}, 构架名称区()),
     ] : null,
     vNode('div', {className: `my-4${schema_selected?'':' d-none'}`}, vNode(核心区)),
     vNode('div', {className: `my-4${(!schema_selected)?'':' d-none'}`}, 构架选择区()),
+    vNode('div', {className: `my-4`}, vNode(临时数据显示区)),
     vNode('div', {className: `my-4`}, 底部按钮区()),
   ]);
 };

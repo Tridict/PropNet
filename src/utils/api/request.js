@@ -1,7 +1,8 @@
 import storage from "../store.js";
 import { stringifyQs } from "../querystring.js";
 
-const baseUrl = 'http://192.168.0.101:8000';
+const baseUrl = 'http://192.168.1.105:8000';
+// const baseUrl = 'http://192.168.0.101:8000';
 
 // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods
 

@@ -56,6 +56,20 @@ const BsLine = (props) => {
         // ghost: true,
         theme: "default",
       }, "(?)")) : null,
+      (props?.deletable),
+      props?.deletable ? vNode(Tooltip, {
+        placement: "top-left",
+        showArrow: false,
+        content: "Press to DELETE this field's data.",
+      }, vNode(Button, {
+        className: "ms-1 text-muted",
+        shape: "circle",
+        size: "small",
+        variant: "text",
+        // ghost: true,
+        theme: "default",
+        onClick: ()=>{props?.onDelete?.(props?.deleteFlag)},
+      }, "×")) : null,
     ]),
     vNode(BsCol, {
       className: "col-12 col-sm-12 col-md-9 col-lg-10",
